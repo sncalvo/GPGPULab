@@ -217,7 +217,6 @@ int main(int argc, char *argv[]){
   bloques_a_CSR(&A, &A_csr);
   print_CSR(&A_csr);
 
-
   VALUE *vector = (VALUE*) malloc(blColN*8*sizeof(VALUE));
 
   random_vector(vector, blColN);
