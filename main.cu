@@ -3,39 +3,21 @@
 #include <math.h>
 #include <sys/time.h>
 
+#include "./types.h"
 #include "./csr_product.cuh"
 
 #define TIME(t_i,t_f) ((double) t_f.tv_sec * 1000.0 + (double) t_f.tv_usec / 1000.0) - \
                       ((double) t_i.tv_sec * 1000.0 + (double) t_i.tv_usec / 1000.0);
 
-#define VALUE float
-
-typedef struct{
-  VALUE * val;
-  int * blStart;
-  unsigned long long * blBmp;
-  int * blColIdx;
-  int * blRowPtr;
-  int blFilN,blColN,nBlocks,nnz;
-} blMat;
-
-typedef struct{
-  VALUE * val;
-  int * colIdx;
-  int * rowPtr;
-  int filN,colN;
-} csrMat;
-
-void gen_matriz_bloques(blMat * A, int blFilN, int blColN) {
-  A->blFilN= blFilN;
-  A->blColN= blColN;
+void gen_matriz_bloques(BlMat *A, int blFilN, int blColN) {
+  A->blFilN = blFilN;
+  A->blColN = blColN;
 
   // genero comienzos de fila de bloques
-  A->blRowPtr = (int*) malloc((blFilN+1)*sizeof(int));
-  A->blRowPtr[0]=0;
-  int n_bl=0;
-  for (int i = 1; i < blFilN+1; ++i)
-  {
+  A->blRowPtr = (int*) malloc((blFilN + 1) * sizeof(int));
+  A->blRowPtr[0] = 0;
+  int n_bl = 0;
+  for (int i = 1; i < blFilN + 1; ++i) {
     n_bl += 1 + rand()%(blColN-1);
     A->blRowPtr[i]=n_bl;
   }
@@ -92,7 +74,7 @@ void gen_matriz_bloques(blMat * A, int blFilN, int blColN) {
   }
 }
 
-void print_matriz_bloques(blMat * A) {
+void print_matriz_bloques(BlMat * A) {
   printf("blfil=%d blcol=%d blocks=%d\n", A->blFilN, A->blColN, A->blRowPtr[A->blFilN]); fflush(0);
 
   for (int i = 0; i <  A->blFilN; ++i) {
@@ -104,7 +86,7 @@ void print_matriz_bloques(blMat * A) {
   }
 }
 
-void print_matriz_bloques_en_COO(blMat * A) {
+void print_matriz_bloques_en_COO(BlMat * A) {
   printf("blfil=%d blcol=%d blocks=%d\n", A->blFilN, A->blColN, A->blRowPtr[A->blFilN]); fflush(0);
   int ctr = 0;
 
@@ -126,7 +108,7 @@ void print_matriz_bloques_en_COO(blMat * A) {
   printf("NNZ=%d\n",ctr);
 }
 
-void bloques_a_CSR(blMat * A_bl, csrMat *A_csr) {
+void bloques_a_CSR(BlMat * A_bl, CSRMat *A_csr) {
   A_csr->filN = A_bl->blFilN*8;
   A_csr->colN = A_bl->blColN*8;
 
@@ -177,7 +159,7 @@ void bloques_a_CSR(blMat * A_bl, csrMat *A_csr) {
 }
 
 
-void print_CSR(csrMat *A_csr) {
+void print_CSR(CSRMat *A_csr) {
   printf("A_csr: %d fils, %d cols, %d nz\n",  A_csr->filN,  A_csr->colN, A_csr->rowPtr[A_csr->filN]- A_csr->rowPtr[0]);
 
   for (int i = 0; i < A_csr->filN; ++i)
@@ -205,14 +187,14 @@ int main(int argc, char *argv[]){
   unsigned int blFilN = atoi(argv[1]);
   unsigned int blColN = atoi(argv[2]);
 
-  blMat A;
+  BlMat A;
 
   gen_matriz_bloques(&A, blFilN, blColN);
 
   print_matriz_bloques(&A);
   print_matriz_bloques_en_COO(&A);
 
-  csrMat A_csr;
+  CSRMat A_csr;
 
   bloques_a_CSR(&A, &A_csr);
   print_CSR(&A_csr);
