@@ -16,15 +16,16 @@ __global__ void spmv_csr_kernel(const int *row_ptr, const int *col_ind, const da
   }
 }
 
+// TODO: Investigate and use __restricted__
 // Kernel that implements spmv product using Block CSR matrix
 template <typename data_type>
 __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
   const int n_block_rows,
   const int bs,
-  const int * __restrict__ col_ids,
-  const int * __restrict__ row_ptr,
-  const data_type * __restrict__ data,
-  const data_type * __restrict__ x,
+  const int *col_ids,
+  const int *row_ptr,
+  const data_type *data,
+  const data_type *x,
   data_type *y
 ) {
   const int idx = blockIdx.x * blockDim.x + threadIdx.x;
