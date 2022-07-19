@@ -244,7 +244,7 @@ int main(int argc, char *argv[]){
   printf("\n");
 
   for (int i = 0; i < A_csr.colN; ++i)
-  {a
+  {
     printf("%.2f\n", res[i]);
   }
 
