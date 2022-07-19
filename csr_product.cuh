@@ -9,8 +9,6 @@ __global__ void spmv_csr_kernel(
 ) {
   const int row = blockIdx.x * blockDim.x + threadIdx.x;
 
-  printf("AAAh row: %d - %d\n", row, A.colN);
-
   if (row >= A.colN) {
     return;
   }
