@@ -52,8 +52,7 @@ __device__ VALUE ** create_dense_block(
 __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
   const BlMat *A,
   const VALUE *x,
-  VALUE *result,
-  const int n
+  VALUE *result
 ) {
   const int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
