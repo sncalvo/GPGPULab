@@ -214,17 +214,17 @@ int main(int argc, char *argv[]){
   cudaMalloc((void **)&d_colIdx, A_csr.rowPtr[A_csr.filN]*sizeof(int));
   cudaMalloc((void **)&d_rowPtr, (A_csr.filN+1)*sizeof(int));
 
-  cudaMemcpy(d_val, A_csr.val, A_csr.rowPtr[A_csr.filN]*sizeof(VALUE), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_colIdx, A_csr.colIdx, A_csr.rowPtr[A_csr.filN]*sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_rowPtr, A_csr.rowPtr, (A_csr.filN+1)*sizeof(int), cudaMemcpyHostToDevice);
-
-  cudaDeviceSynchronize();
+  CUDA_CHK(cudaMemcpy(d_val, A_csr.val, A_csr.rowPtr[A_csr.filN]*sizeof(VALUE), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMemcpy(d_colIdx, A_csr.colIdx, A_csr.rowPtr[A_csr.filN]*sizeof(int), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMemcpy(d_rowPtr, A_csr.rowPtr, (A_csr.filN+1)*sizeof(int), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaGetLastError());
+  CUDA_CHK(cudaDeviceSynchronize());
   A_csr.val = d_val;
   A_csr.colIdx = d_colIdx;
   A_csr.rowPtr = d_rowPtr;
 
   VALUE *d_res;
-  cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE));
+  CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
 
 	dim3 dimBlock(256);
 	dim3 dimGrid(A_csr.colN / 256);
@@ -236,14 +236,15 @@ int main(int argc, char *argv[]){
 
   spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
 
-  cudaDeviceSynchronize();
+  CUDA_CHK(cudaGetLastError());
+  CUDA_CHK(cudaDeviceSynchronize());
   VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
-  cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost);
+  CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
   printf("\n");
 
   for (int i = 0; i < A_csr.colN; ++i)
-  {
+  {a
     printf("%.2f\n", res[i]);
   }
 
