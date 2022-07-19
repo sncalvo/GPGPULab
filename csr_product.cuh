@@ -42,7 +42,8 @@ __global__ void spmv_csr_kernel(
 __device__ VALUE ** create_dense_block(
   const unsigned long long bitMap,
   const int start,
-  const VALUE *values, int i
+  const VALUE *values,
+  int i
 ) {
   // SHOULD IT BE MALLOC???
   VALUE **block = (VALUE **)malloc(sizeof(VALUE *) * 32);
@@ -72,17 +73,22 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
     return;
   }
 
-  const int start = A->blFilPtr[idx];
-  const int end = A->blFilPtr[idx + 1];
+  const int start = A->blRowPtr[idx];
+  const int end = A->blRowPtr[idx + 1];
 
   VALUE sum = 0;
 
   for (int i = start; i < end; i++) {
     const int col = A->blColIdx[i];
-    sum += A->blVal[i] * x[col];
+    sum += A->blStart[i] * x[col];
 
     // Create dense block
-    const VALUE **dense_block = create_dense_block();
+    const VALUE **dense_block = create_dense_block(
+      A->blBitMap[i],
+      A->blStart[i],
+      A->blVal[i],
+      0
+    );
 
     // Multiply dense block by dense vector
     for (int j = 0; j < 32; j++) {
@@ -102,9 +108,9 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix_1 (
   const int bs,
   const int *col_ids,
   const int *row_ptr,
-  const data_type *data,
-  const data_type *x,
-  data_type *y
+  const VALUE *data,
+  const VALUE *x,
+  VALUE *y
 ) {
   const int idx = blockIdx.x * blockDim.x + threadIdx.x;
   const int row = idx % bs;
@@ -113,7 +119,7 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix_1 (
   const int last_block = row_ptr[block_row + 1];
 
   if (row < bs && block_row < n_block_rows) {
-    data_type local_out = 0.0;
+    VALUE local_out = 0.0;
 
     for (int block = first_block; block < last_block; block++) {
       const int first_col = col_ids[block] * bs;
