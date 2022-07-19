@@ -86,8 +86,8 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
     const VALUE **dense_block = create_dense_block(
       A->blBmp[i],
       A->blStart[i],
-      A->val[i],
-      0
+      A->val,
+      i
     );
 
     // Multiply dense block by dense vector
