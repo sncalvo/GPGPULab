@@ -223,7 +223,7 @@ int main(int argc, char *argv[]){
   A_csr.colIdx = d_colIdx;
   A_csr.rowPtr = d_rowPtr;
 
-  VALUE *d_res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
+  VALUE *d_res;
   cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE));
 
 	dim3 dimBlock(256);
