@@ -42,7 +42,7 @@ __global__ void spmv_csr_kernel(
 __device__ VALUE ** create_dense_block(
   const unsigned long long bitMap,
   const int start,
-  const VALUE *values,
+  VALUE *values,
   int i
 ) {
   // SHOULD IT BE MALLOC???
