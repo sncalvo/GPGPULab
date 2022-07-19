@@ -231,12 +231,24 @@ int main(int argc, char *argv[]){
 
   spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res, A_csr.colN);
 
-  // cudaDeviceSynchronize();
-	// cudaMemcpy(data_host, data, sizeof(int)*DATA_SIZE*DATA_SIZE, cudaMemcpyDeviceToHost);
+  cudaDeviceSynchronize();
+  VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
+  cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost);
 
-  // cudaFree(data);
+  printf("\n");
 
-	// free(data_host);
+  for (int i = 0; i < A_csr.colN; ++i)
+  {
+    printf("%.2f\n", res[i]);
+  }
 
+  cudaFree(d_vector);
+  cudaFree(d_val);
+  cudaFree(d_colIdx);
+  cudaFree(d_rowPtr);
+  cudaFree(d_res);
+
+	free(vector);
+  free(res);
 	return 0;
 }
