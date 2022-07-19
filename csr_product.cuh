@@ -2,42 +2,27 @@
 
 // Kernel that implements spmv product using CSR matrix
 __global__ void spmv_csr_kernel(
-  const CSRMat A,
-  const VALUE *x,
-  VALUE *result,
-  const int n
+  const CSRMat A, // CSR Matrix A
+  const VALUE *x, // Vector x
+  VALUE *result // Result vector
 ) {
   const int row = blockIdx.x * blockDim.x + threadIdx.x;
 
-  if (row < n) {
-    const int start = A.rowPtr[row];
-    const int end = A.rowPtr[row + 1];
-
-    VALUE sum = 0;
-    for (int i = start; i < end; i++) {
-      const int col = A.colIdx[i];
-      sum += A.val[i] * x[col];
-    }
-
-    result[row] = sum;
+  if (row >= A.colN) {
+    return;
   }
+
+  const int start = A.rowPtr[row];
+  const int end = A.rowPtr[row + 1];
+
+  VALUE sum = 0;
+  for (int i = start; i < end; i++) {
+    const int col = A.colIdx[i];
+    sum += A.val[i] * x[col];
+  }
+
+  result[row] = sum;
 }
-
-// __global__ void spmv_csr_kernel(const int *row_ptr, const int *col_ind, const data_type *val, const data_type *x, data_type *y, const int n) {
-//   const int row = blockIdx.x * blockDim.x + threadIdx.x;
-//   if (row < n) {
-//     const int start = row_ptr[row];
-//     const int end = row_ptr[row + 1];
-
-//     data_type sum = 0;
-//     for (int i = start; i < end; i++) {
-//       const int col = col_ind[i];
-//       sum += val[i] * x[col];
-//     }
-
-//     y[row] = sum;
-//   }
-// }
 
 __device__ VALUE ** create_dense_block(
   const unsigned long long bitMap,
