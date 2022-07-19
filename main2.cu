@@ -234,6 +234,7 @@ int main(int argc, char *argv[]){
 	dim3 dimGrid((A.blColN + 256 - 1) / 256);
 
   // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
+  bcsr_spmv_kernel_thread_per_row_row_major_matrix<<<dimGrid, dimBlock>>>(A, vector, d_res);
 
   CUDA_CHK(cudaGetLastError());
   CUDA_CHK(cudaDeviceSynchronize());
