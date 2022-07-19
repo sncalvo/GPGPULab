@@ -80,13 +80,13 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
 
   for (int i = start; i < end; i++) {
     const int col = A->blColIdx[i];
-    sum += A->blStart[i] * x[col];
+    sum += A->val[i] * x[col];
 
     // Create dense block
     const VALUE **dense_block = create_dense_block(
-      A->blBitMap[i],
+      A->blBmp[i],
       A->blStart[i],
-      A->blVal[i],
+      A->val[i],
       0
     );
 
