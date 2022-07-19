@@ -18,4 +18,4 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 nvcc ./main.cu -o solution
 
-./ej1_sol 10 10
+./solution 10 10
