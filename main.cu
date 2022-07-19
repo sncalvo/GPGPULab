@@ -229,6 +229,11 @@ int main(int argc, char *argv[]){
 	dim3 dimBlock(256);
 	dim3 dimGrid(A_csr.colN / 256);
 
+  for (int i = 0; i < A_csr.colN; ++i)
+  {
+    printf("%.2f\n", vector[i]);
+  }
+
   spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
 
   cudaDeviceSynchronize();
