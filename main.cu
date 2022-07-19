@@ -199,9 +199,9 @@ int main(int argc, char *argv[]){
   bloques_a_CSR(&A, &A_csr);
   print_CSR(&A_csr);
 
-  VALUE *vector = (VALUE*) malloc(blColN*8*sizeof(VALUE));
+  VALUE *vector = (VALUE*) malloc(A_csr.colN*8*sizeof(VALUE));
 
-  random_vector(vector, blColN);
+  random_vector(vector, A_csr.colN);
 
   VALUE *d_vector = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
   cudaMalloc((void **)&d_vector, A_csr.colN*sizeof(VALUE));
