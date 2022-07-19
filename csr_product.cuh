@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "./types.h"
 
 // Kernel that implements spmv product using CSR matrix
@@ -18,6 +19,7 @@ __global__ void spmv_csr_kernel(
   VALUE sum = 0;
   for (int i = start; i < end; i++) {
     const int col = A.colIdx[i];
+    printf("%d %d %d\n", row, col, A.val[i]);
     sum += A.val[i] * x[col];
   }
 

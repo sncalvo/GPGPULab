@@ -229,7 +229,7 @@ int main(int argc, char *argv[]){
 	dim3 dimBlock(256);
 	dim3 dimGrid(A_csr.colN / 256);
 
-  spmv_csr_kernel<<<A_csr.colN / 256, 256>>>(A_csr, d_vector, d_res);
+  spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
 
   cudaDeviceSynchronize();
   VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
