@@ -2,7 +2,7 @@
 
 // Kernel that implements spmv product using CSR matrix
 __global__ void spmv_csr_kernel(
-  const CSTMat *A,
+  const CSRMat A,
   const VALUE *x,
   VALUE *result,
   const int n
@@ -10,13 +10,13 @@ __global__ void spmv_csr_kernel(
   const int row = blockIdx.x * blockDim.x + threadIdx.x;
 
   if (row < n) {
-    const int start = A->rowPtr[row];
-    const int end = A->rowPtr[row + 1];
+    const int start = A.rowPtr[row];
+    const int end = A.rowPtr[row + 1];
 
     VALUE sum = 0;
     for (int i = start; i < end; i++) {
-      const int col = A->colIdx[i];
-      sum += A->val[i] * x[col];
+      const int col = A.colIdx[i];
+      sum += A.val[i] * x[col];
     }
 
     result[row] = sum;

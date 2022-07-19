@@ -203,5 +203,40 @@ int main(int argc, char *argv[]){
 
   random_vector(vector, blColN);
 
+  VALUE *d_vector = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
+  cudaMalloc((void **)&d_vector, A_csr.colN*sizeof(VALUE));
+	cudaMemcpy(d_vector, vector, A_csr.colN*sizeof(VALUE), cudaMemcpyHostToDevice);
+
+  VALUE *d_val = (VALUE*) malloc(A_csr.rowPtr[A_csr.filN]*sizeof(VALUE));
+  int *d_colIdx = (int*) malloc(A_csr.rowPtr[A_csr.filN]*sizeof(int));
+  int *d_rowPtr = (int*) malloc((A_csr.filN+1)*sizeof(int));
+  cudaMalloc((void **)&d_val, A_csr.rowPtr[A_csr.filN]*sizeof(VALUE));
+  cudaMalloc((void **)&d_colIdx, A_csr.rowPtr[A_csr.filN]*sizeof(int));
+  cudaMalloc((void **)&d_rowPtr, (A_csr.filN+1)*sizeof(int));
+
+  cudaMemcpy(d_val, A_csr.val, A_csr.rowPtr[A_csr.filN]*sizeof(VALUE), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_colIdx, A_csr.colIdx, A_csr.rowPtr[A_csr.filN]*sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_rowPtr, A_csr.rowPtr, (A_csr.filN+1)*sizeof(int), cudaMemcpyHostToDevice);
+
+  cudaDeviceSynchronize();
+  A_csr.val = d_val;
+  A_csr.colIdx = d_colIdx;
+  A_csr.rowPtr = d_rowPtr;
+
+  VALUE *d_res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
+  cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE));
+
+	dim3 dimBlock(256);
+	dim3 dimGrid(A_csr.colN / 256);
+
+  spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res, A_csr.colN);
+
+  // cudaDeviceSynchronize();
+	// cudaMemcpy(data_host, data, sizeof(int)*DATA_SIZE*DATA_SIZE, cudaMemcpyDeviceToHost);
+
+  // cudaFree(data);
+
+	// free(data_host);
+
 	return 0;
 }
