@@ -85,35 +85,3 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
     }
   }
 }
-
-// TODO: Investigate and use __restricted__
-// Kernel that implements spmv product using Block CSR matrix
-__global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix_1 (
-  const int n_block_rows,
-  const int bs,
-  const int *col_ids,
-  const int *row_ptr,
-  const VALUE *data,
-  const VALUE *x,
-  VALUE *y
-) {
-  const int idx = blockIdx.x * blockDim.x + threadIdx.x;
-  const int row = idx % bs;
-  const int block_row = idx / bs;
-  const int first_block = row_ptr[block_row];
-  const int last_block = row_ptr[block_row + 1];
-
-  if (row < bs && block_row < n_block_rows) {
-    VALUE local_out = 0.0;
-
-    for (int block = first_block; block < last_block; block++) {
-      const int first_col = col_ids[block] * bs;
-
-      for (int col = 0; col < bs; col++) {
-        local_out += x[first_col + col] * data[block * bs * bs + row * bs + col];
-      }
-    }
-
-    y[block_row * bs + row] = local_out;
-  }
-}
