@@ -22,8 +22,6 @@ __global__ void spmv_csr_kernel(
     sum += A.val[i] * x[col];
   }
 
-  printf("AH!!! %d: %f\n", row, sum);
-
   result[row] = sum;
 }
 
