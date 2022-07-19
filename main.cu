@@ -234,6 +234,9 @@ int main(int argc, char *argv[]){
   //   printf("%.2f\n", vector[i]);
   // }
 
+  printf("%d\n", dimBlock.x);
+  printf("%d\n", dimGrid.x);
+
   spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
 
   CUDA_CHK(cudaGetLastError());
