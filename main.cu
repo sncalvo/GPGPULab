@@ -227,7 +227,8 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
 
 	dim3 dimBlock(256);
-	dim3 dimGrid(A_csr.colN / 256);
+  // Fast ceil(A_csr.colN/256)
+	dim3 dimGrid((A_csr.colN + 256 - 1) / 256);
 
   // for (int i = 0; i < A_csr.colN; ++i)
   // {
