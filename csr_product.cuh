@@ -83,7 +83,7 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
     sum += A->val[i] * x[col];
 
     // Create dense block
-    const VALUE **dense_block = create_dense_block(
+    VALUE **dense_block = create_dense_block(
       A->blBmp[i],
       A->blStart[i],
       A->val,
