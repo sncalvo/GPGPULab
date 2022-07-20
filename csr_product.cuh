@@ -15,8 +15,6 @@ __global__ void spmv_csr_kernel(
 
   __shared__ int near_row[1024];
 
-  // const int start = A.rowPtr[row];
-  // const int end = A.rowPtr[row + 1];
   near_row[threadIdx.x] = A.rowPtr[row];
   __syncthreads();
 
@@ -35,37 +33,11 @@ __global__ void spmv_csr_kernel(
     sum += near_val[threadIdx.x] * x[near_col[threadIdx.x]];
   }
 
-  // for (int i = start; i < end; i++) {
-  //   const int col = A.colIdx[i];
-  //   sum += A.val[i] * x[col];
-  // }
-
   result[row] = sum;
 }
 
-__device__ VALUE ** create_dense_block(
-  const unsigned long long bitMap,
-  const int start,
-  VALUE *values,
-  int i
-) {
-  // SHOULD IT BE MALLOC???
-  VALUE **block = (VALUE **)malloc(sizeof(VALUE *) * 32);
-
-  for (int j = 0; j < 32; j++) {
-    if (bitMap & (1 << j)) {
-      block[j] = (VALUE *)malloc(sizeof(VALUE) * 32);
-      for (int k = 0; k < 32; k++) {
-        block[j][k] = values[i++];
-      }
-    }
-  }
-
-  return block;
-}
-
 // Kernel that implements spmv product using Block CSR matrix
-__global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
+__global__ void bsr_vector_kernel(
   BlMat A,
   const VALUE *x,
   VALUE *result
@@ -76,29 +48,34 @@ __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
     return;
   }
 
-  const int start = A.blRowPtr[idx];
-  const int end = A.blRowPtr[idx + 1];
+  const int rowStart = A.blRowPtr[idx];
+  const int rowEnd = A.blRowPtr[idx + 1];
 
   VALUE sum = 0;
 
-  for (int i = start; i < end; i++) {
+  for (int i = rowStart; i < rowEnd - 1; i++) {
     const int col = A.blColIdx[i];
-    sum += A.val[i] * x[col];
 
     // Create dense block
-    VALUE **dense_block = create_dense_block(
-      A.blBmp[i],
-      A.blStart[i],
-      A.val,
-      i
-    );
+    VALUE block[8][8];
+    unsigned long long bitMap = A.blMap[i];
+    const int start = A.blStart[i];
+    const int end = A.blStart[i + 1];
+
+    for (int j = 0; j < 8; j++) {
+      for (int k = 0; k < 8; k++) {
+        if (bitMap[i] & (1 << (j*k))) {
+          block[j][k] = A.val[start + j + k];
+        } else {
+          block[j][k] = 0;
+        }
+      }
+    }
 
     // Multiply dense block by dense vector
-    for (int j = 0; j < 32; j++) {
-      if (dense_block[j] != NULL) {
-        for (int k = 0; k < 32; k++) {
-          sum += dense_block[j][k] * x[col];
-        }
+    for (int j = 0; j < 8; j++) {
+      for (int k = 0; k < 8; k++) {
+        sum += block[j][k] * x[col];
       }
     }
   }
