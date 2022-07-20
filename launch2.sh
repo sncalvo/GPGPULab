@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=mitrabajo
 #SBATCH --ntasks=1
-#SBATCH --mem=512
+#SBATCH --mem=8192
 #SBATCH --time=00:00:30
 
 #SBATCH --partition=besteffort
