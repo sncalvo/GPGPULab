@@ -66,7 +66,7 @@ __device__ VALUE ** create_dense_block(
 
 // Kernel that implements spmv product using Block CSR matrix
 __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
-  const BlMat *A,
+  BlMat *A,
   const VALUE *x,
   VALUE *result
 ) {
