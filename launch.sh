@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=mitrabajo
 #SBATCH --ntasks=1
-#SBATCH --mem=2048
+#SBATCH --mem=8192
 #SBATCH --time=00:10:00
 
 #SBATCH --partition=besteffort
@@ -34,7 +34,7 @@ echo '============================'
 echo 'TESTING EFFICIENCY'
 echo '============================'
 
-nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency 10000 10000
+nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency solution 10000 10000
 
 echo '============================'
 echo 'END'
