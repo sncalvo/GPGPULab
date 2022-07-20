@@ -44,16 +44,14 @@ __global__ void bsr_vector_kernel(
 ) {
   const int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
-  if (idx >= A.blFilN) {
+  if (idx + 1 >= A.blFilN) {
     return;
   }
 
   const int rowStart = A.blRowPtr[idx];
   const int rowEnd = A.blRowPtr[idx + 1];
 
-  VALUE sum = 0;
-
-  for (int i = rowStart; i < rowEnd - 1; i++) {
+  for (int i = rowStart; i < rowEnd; i++) {
     const int col = A.blColIdx[i];
 
     // Create dense block
@@ -75,7 +73,7 @@ __global__ void bsr_vector_kernel(
     // Multiply dense block by dense vector
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
-        atomicAdd(&result[idx + j], block[j][k] * x[col + k]);
+        result[idx + j] += block[j][k] * x[col + k];
       }
     }
   }
