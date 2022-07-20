@@ -75,10 +75,8 @@ __global__ void bsr_vector_kernel(
     // Multiply dense block by dense vector
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
-        sum += block[j][k] * x[col];
+        atomicAdd(&result[idx + j], block[j][k] * x[col + k]);
       }
     }
   }
-
-  result[idx] = sum;
 }
