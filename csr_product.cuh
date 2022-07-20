@@ -13,14 +13,32 @@ __global__ void spmv_csr_kernel(
     return;
   }
 
-  const int start = A.rowPtr[row];
-  const int end = A.rowPtr[row + 1];
+  __shared__ int near_row[1024];
+
+  // const int start = A.rowPtr[row];
+  // const int end = A.rowPtr[row + 1];
+  near_row[threadIdx.x] = A.rowPtr[row];
+  __syncthreads();
+
+  int start = near_row[threadIdx.x];
+  int end = near_row[threadIdx.x + 1];
+
+  __shared__ VALUE near_val[1024];
+  __shared__ int near_col[1024];
+
+  near_val[threadIdx.x] = A.val[start];
+  near_col[threadIdx.x] = A.colIdx[start];
+  __syncthreads();
 
   VALUE sum = 0;
   for (int i = start; i < end; i++) {
-    const int col = A.colIdx[i];
-    sum += A.val[i] * x[col];
+    sum += near_val[threadIdx.x] * x[near_col[threadIdx.x]];
   }
+
+  // for (int i = start; i < end; i++) {
+  //   const int col = A.colIdx[i];
+  //   sum += A.val[i] * x[col];
+  // }
 
   result[row] = sum;
 }
