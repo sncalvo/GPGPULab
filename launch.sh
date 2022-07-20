@@ -34,7 +34,7 @@ echo '============================'
 echo 'TESTING EFFICIENCY'
 echo '============================'
 
-nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency solution 10000 10000
+nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution 10000 10000
 
 echo '============================'
 echo 'END'
