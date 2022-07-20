@@ -58,13 +58,13 @@ __global__ void bsr_vector_kernel(
 
     // Create dense block
     VALUE block[8][8];
-    unsigned long long bitMap = A.blMap[i];
+    unsigned long long bitMap = A.blBmp[i];
     const int start = A.blStart[i];
     const int end = A.blStart[i + 1];
 
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
-        if (bitMap[i] & (1 << (j*k))) {
+        if (bitMap & (1 << (j*k)) && start + j + k < end) {
           block[j][k] = A.val[start + j + k];
         } else {
           block[j][k] = 0;
