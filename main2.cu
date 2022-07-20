@@ -229,30 +229,36 @@ int main(int argc, char *argv[]){
   A.blRowPtr = d_blRowPtr;
   A.val = d_val;
 
+  VALUE *d_vector;
+  CUDA_CHK(cudaMalloc((void **)&d_vector, A.blColN*sizeof(VALUE)));
+  CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*sizeof(VALUE), cudaMemcpyHostToDevice));
+
 	dim3 dimBlock(256);
   // Fast ceil(A_csr.colN/256)
 	dim3 dimGrid((A.blColN + 256 - 1) / 256);
 
   // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
-  bcsr_spmv_kernel_thread_per_row_row_major_matrix<<<dimGrid, dimBlock>>>(A, vector, d_res);
+  bcsr_spmv_kernel_thread_per_row_row_major_matrix<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
 
   CUDA_CHK(cudaGetLastError());
   CUDA_CHK(cudaDeviceSynchronize());
-  VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
-  CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
+  VALUE *res = (VALUE*) malloc(A.blColN*sizeof(VALUE));
+  CUDA_CHK(cudaMemcpy(res, d_res, A.blColN*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
   printf("\n");
 
-  for (int i = 0; i < A_csr.colN; ++i)
+  for (int i = 0; i < A.blColN; ++i)
   {
     printf("%.2f\n", res[i]);
   }
 
   cudaFree(d_vector);
-  cudaFree(d_val);
-  cudaFree(d_colIdx);
-  cudaFree(d_rowPtr);
   cudaFree(d_res);
+  cudaFree(d_blStart);
+  cudaFree(d_blColIdx);
+  cudaFree(d_blBmp);
+  cudaFree(d_blRowPtr);
+  cudaFree(d_val);
 
 	free(vector);
   free(res);
