@@ -79,4 +79,6 @@ __global__ void bsr_vector_kernel(
       }
     }
   }
+
+  result[idx] = sum;
 }
