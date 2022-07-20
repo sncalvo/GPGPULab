@@ -66,30 +66,30 @@ __device__ VALUE ** create_dense_block(
 
 // Kernel that implements spmv product using Block CSR matrix
 __global__ void bcsr_spmv_kernel_thread_per_row_row_major_matrix (
-  BlMat *A,
+  BlMat A,
   const VALUE *x,
   VALUE *result
 ) {
   const int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
-  if (idx >= A->blFilN) {
+  if (idx >= A.blFilN) {
     return;
   }
 
-  const int start = A->blRowPtr[idx];
-  const int end = A->blRowPtr[idx + 1];
+  const int start = A.blRowPtr[idx];
+  const int end = A.blRowPtr[idx + 1];
 
   VALUE sum = 0;
 
   for (int i = start; i < end; i++) {
-    const int col = A->blColIdx[i];
-    sum += A->val[i] * x[col];
+    const int col = A.blColIdx[i];
+    sum += A.val[i] * x[col];
 
     // Create dense block
     VALUE **dense_block = create_dense_block(
-      A->blBmp[i],
-      A->blStart[i],
-      A->val,
+      A.blBmp[i],
+      A.blStart[i],
+      A.val,
       i
     );
 
