@@ -2,7 +2,7 @@
 #SBATCH --job-name=mitrabajo
 #SBATCH --ntasks=1
 #SBATCH --mem=8192
-#SBATCH --time=00:10:00
+#SBATCH --time=00:02:00
 
 #SBATCH --partition=besteffort
 
@@ -26,5 +26,5 @@ echo '============================'
 echo 'NORMAL RUN STARTING'
 echo '============================'
 
-cuda-memcheck ./solution3 10000 10000
-# ./solution3 10000 10000
+# cuda-memcheck ./solution3 10000 10000
+./solution3 10000 10000
