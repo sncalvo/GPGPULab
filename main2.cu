@@ -225,7 +225,7 @@ int main(int argc, char *argv[]){
   A.val = d_val;
 
   VALUE *d_vector;
-  CUDA_CHK(cudaMalloc((void **)&d_vector, A.blColN*sizeof(VALUE)));
+  CUDA_CHK(cudaMalloc((void **)&d_vector, A.blColN*8*sizeof(VALUE)));
   CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*sizeof(VALUE), cudaMemcpyHostToDevice));
 
 	dim3 dimBlock(256);
