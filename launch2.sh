@@ -22,13 +22,11 @@ nvcc ./main2.cu -o solution2
 
 # cuda-memcheck ./solution2 10000 10000
 
-./solution2 10 10
+echo '============================'
+echo 'NORMAL RUN STARTING'
+echo '============================'
 
-# echo '============================'
-# echo 'NORMAL RUN STARTING'
-# echo '============================'
-
-# ./solution2 10000 10000
+./solution2 10000 10000
 
 # echo '============================'
 # echo 'TESTING TIME'
