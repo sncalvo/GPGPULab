@@ -63,9 +63,9 @@ __global__ void bsr_vector_kernel(
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
         if (bitMap & (1 << (j*k)) && start + j + k < end) {
-          // block[j][k] = A.val[start + j + k];
+          A.val[start + j + k];
         } else {
-          block[j][k] = 0;
+          // block[j][k] = 0;
         }
       }
     }
