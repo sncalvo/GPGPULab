@@ -74,7 +74,7 @@ __global__ void bsr_vector_kernel(
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
         // result[idx + j] += block[j][k] * x[col + k];
-        const int hola = block[j][k];
+        const int hola = x[col + k];
       }
     }
   }
