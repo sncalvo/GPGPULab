@@ -236,12 +236,7 @@ int main(int argc, char *argv[]){
   void *dBuffer;
   size_t bufferSize = 0;
 
-  CHECK_CUSPARSE(cusparseCreate(&handle));
-
   cusparseMatDescr_t descr_A;
-  CHECK_CUSPARSE(cusparseCreateMatDescr (&descr_A));
-  CHECK_CUSPARSE(cusparseSetMatType (descr_A, CUSPARSE_MATRIX_TYPE_GENERAL));
-  CHECK_CUSPARSE(cusparseSetMatIndexBase (descr_A, CUSPARSE_INDEX_BASE_ZERO));
 
   BlMat A;
 
@@ -282,6 +277,7 @@ int main(int argc, char *argv[]){
   VALUE *d_res;
   CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
 
+  CHECK_CUSPARSE(cusparseCreate(&handle));
   CHECK_CUSPARSE(cusparseCreateCsr(
     &matA,
     A_csr.filN,
@@ -307,7 +303,10 @@ int main(int argc, char *argv[]){
     &alpha, matA, vecX, &beta, vecY, CUDA_R_32F,
     CUSPARSE_MV_ALG_DEFAULT, &bufferSize
   ));
-  cudaMalloc(&dBuffer, bufferSize);
+  CUDA_CHK(cudaMalloc(&dBuffer, bufferSize));
+
+  printf("bufferSize: %d\n", bufferSize);
+
   CHECK_CUSPARSE(cusparseSpMV(
     handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     &alpha, matA, vecX, &beta, vecY, CUDA_R_32F,
