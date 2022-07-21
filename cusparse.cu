@@ -1,6 +1,5 @@
 #include <cuda_runtime.h>
 #include <cusparse_v2.h>
-#include <cusp/csr_matrix.h>
 
 #include <stdlib.h>
 #include <stdio.h>

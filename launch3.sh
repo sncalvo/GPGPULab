@@ -20,7 +20,7 @@ rm ./solution3
 
 nvcc --version
 
-nvcc ./cusparse.cu -lcusparse -o solution3
+nvcc ./cusparse.cu -lcusparse -std=c++14 -o solution3
 
 # cuda-memcheck ./solution2 10000 10000
 
