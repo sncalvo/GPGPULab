@@ -75,10 +75,10 @@ __global__ void bsr_vector_kernel(
       for (int k = 0; k < 8; k++) {
         // result[idx * 8 + j] += block[j][k] * x[col + k];
         const VALUE tmp = block[j][k];
-        const VALUE tmp2 = x[col + k];
-        // const VALUE tmp3 = result[idx * 8 + j];
+        // const VALUE tmp2 = x[col + k];
+        const VALUE tmp3 = result[idx * 8 + j];
 
-        printf("%f %f\n", tmp, tmp2);
+        printf("%f %f\n", tmp, tmp3);
       }
     }
   }
