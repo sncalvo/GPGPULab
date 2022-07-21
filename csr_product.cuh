@@ -51,10 +51,10 @@ __global__ void bsr_vector_kernel(
   const int rowStart = A.blRowPtr[idx];
   const int rowEnd = A.blRowPtr[idx + 1];
 
-  return;
-
   for (int i = rowStart; i < rowEnd; i++) {
     const int col = A.blColIdx[i];
+
+    continue;
 
     // Create dense block
     VALUE block[8][8];
