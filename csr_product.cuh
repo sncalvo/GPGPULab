@@ -78,7 +78,7 @@ __global__ void bsr_vector_kernel(
         const VALUE tmp2 = x[col + k];
         const VALUE tmp3 = result[idx * 8 + j];
 
-        if (k > 9) {
+        if (k > 6 && threadIdx.x == 0) {
           printf("%f %f %f\n", tmp, tmp2, tmp3);
         }
       }
