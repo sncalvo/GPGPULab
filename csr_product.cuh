@@ -54,14 +54,13 @@ __global__ void bsr_vector_kernel(
   for (int i = rowStart; i < rowEnd; i++) {
     const int col = A.blColIdx[i];
 
-    continue;
-
     // Create dense block
     VALUE block[8][8];
     unsigned long long bitMap = A.blBmp[i];
     const int start = A.blStart[i];
     const int end = A.blStart[i + 1];
 
+    continue;
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
         if (bitMap & (1 << (j*k)) && start + j + k < end) {
