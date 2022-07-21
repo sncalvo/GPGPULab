@@ -264,12 +264,12 @@ int main(int argc, char *argv[]){
   cusparse_csrmv(
     handle,
     CUSPARSE_OPERATION_NON_TRANSPOSE,
-    A.val,
-    A.rowPtr,
-    A.colIdx,
-    A.filN,
-    A.colN,
-    A.nnz,
+    A_csr.val,
+    A_csr.rowPtr,
+    A_csr.colIdx,
+    A_csr.filN,
+    A_csr.colN,
+    A_csr.nnz,
     d_vector,
     d_res);
   );
