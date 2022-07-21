@@ -267,7 +267,7 @@ int main(int argc, char *argv[]){
     A_csr.colIdx,
     A_csr.filN,
     A_csr.colN,
-    A_csr.nnz,
+    A.nnz,
     d_vector,
     d_res
   );
