@@ -78,7 +78,9 @@ __global__ void bsr_vector_kernel(
         // const VALUE tmp2 = x[col + k];
         const VALUE tmp3 = result[idx * 8 + j];
 
-        printf("%f %f %d\n", tmp, tmp3, col);
+        if (k > 9) {
+          printf("%f %f %d\n", tmp, tmp3, col);
+        }
       }
     }
   }
