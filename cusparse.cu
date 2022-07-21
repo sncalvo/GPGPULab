@@ -42,7 +42,15 @@
   // );
 // }
 
-
+#define CHECK_CUSPARSE(func)                                                   \
+{                                                                              \
+    cusparseStatus_t status = (func);                                          \
+    if (status != CUSPARSE_STATUS_SUCCESS) {                                   \
+        printf("CUSPARSE API failed at line %d with error: %s (%d)\n",         \
+               __LINE__, cusparseGetErrorString(status), status);              \
+        return EXIT_FAILURE;                                                   \
+    }                                                                          \
+}
 
 void gen_matriz_bloques(BlMat *A, int blFilN, int blColN) {
   A->blFilN = blFilN;
@@ -228,12 +236,12 @@ int main(int argc, char *argv[]){
   void *dBuffer;
   size_t bufferSize = 0;
 
-  cusparseCreate(&handle);
+  CHECK_CUSPARSE(cusparseCreate(&handle));
 
   cusparseMatDescr_t descr_A;
-  cusparseCreateMatDescr (&descr_A);
-  cusparseSetMatType (descr_A, CUSPARSE_MATRIX_TYPE_GENERAL);
-  cusparseSetMatIndexBase (descr_A, CUSPARSE_INDEX_BASE_ZERO);
+  CHECK_CUSPARSE(cusparseCreateMatDescr (&descr_A));
+  CHECK_CUSPARSE(cusparseSetMatType (descr_A, CUSPARSE_MATRIX_TYPE_GENERAL));
+  CHECK_CUSPARSE(cusparseSetMatIndexBase (descr_A, CUSPARSE_INDEX_BASE_ZERO));
 
   BlMat A;
 
@@ -274,7 +282,7 @@ int main(int argc, char *argv[]){
   VALUE *d_res;
   CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
 
-  cusparseCreateCsr(
+  CHECK_CUSPARSE(cusparseCreateCsr(
     &matA,
     A_csr.filN,
     A_csr.colN,
@@ -286,30 +294,30 @@ int main(int argc, char *argv[]){
     CUSPARSE_INDEX_32I,
     CUSPARSE_INDEX_BASE_ZERO,
     CUDA_R_32F
-  );
-  cusparseCreateDnVec(&vecX, A_csr.colN, d_vector, CUDA_R_32F);
+  ));
+  CHECK_CUSPARSE(cusparseCreateDnVec(&vecX, A_csr.colN, d_vector, CUDA_R_32F));
   // Create dense vector y
-  cusparseCreateDnVec(&vecY, A_csr.colN, d_res, CUDA_R_32F);
+  CHECK_CUSPARSE(cusparseCreateDnVec(&vecY, A_csr.colN, d_res, CUDA_R_32F));
 
   float alpha = 1.0f;
   float beta = 0.0f;
 
-  cusparseSpMV_bufferSize(
+  CHECK_CUSPARSE(cusparseSpMV_bufferSize(
     handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     &alpha, matA, vecX, &beta, vecY, CUDA_R_32F,
     CUSPARSE_MV_ALG_DEFAULT, &bufferSize
-  );
+  ));
   cudaMalloc(&dBuffer, bufferSize);
-  cusparseSpMV(
+  CHECK_CUSPARSE(cusparseSpMV(
     handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     &alpha, matA, vecX, &beta, vecY, CUDA_R_32F,
     CUSPARSE_MV_ALG_DEFAULT, dBuffer
-  );
+  ));
 
-  cusparseDestroySpMat(matA);
-  cusparseDestroyDnVec(vecX);
-  cusparseDestroyDnVec(vecY);
-  cusparseDestroy(handle);
+  CHECK_CUSPARSE(cusparseDestroySpMat(matA));
+  CHECK_CUSPARSE(cusparseDestroyDnVec(vecX));
+  CHECK_CUSPARSE(cusparseDestroyDnVec(vecY));
+  CHECK_CUSPARSE(cusparseDestroy(handle));
 
   VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
   CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
