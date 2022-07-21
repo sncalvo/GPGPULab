@@ -15,21 +15,21 @@
 void cusparse_csrmv (
     cusparseHandle_t &handle,
     cusparseMatDescr_t descr_A,
-    const double *A,
+    const float *A,
     const unsigned int *row_ptr,
     const unsigned int *col_ids,
     int rows,
     int cols,
     int nns,
-    double * x,
-    double * y
+    float * x,
+    float * y
 ) {
-  const double alpha = 1.0;
-  const double beta = 0.0;
-  cusparseDcsrmv(
+  const float alpha = 1.0;
+  const float beta = 0.0;
+  cusparseScsrmv(
     handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     rows, cols, nnz,
-    &alpha, descr_A,
+    &alpha, 0,
     A, reinterpret_cast<const int *> (row_ptr), reinterpret_cast<const int *> (col_ids),
     x, &beta, y
   );
@@ -271,7 +271,7 @@ int main(int argc, char *argv[]){
     A_csr.colN,
     A_csr.nnz,
     d_vector,
-    d_res);
+    d_res
   );
 
   CUDA_CHK(cudaGetLastError());
