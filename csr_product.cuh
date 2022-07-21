@@ -73,14 +73,14 @@ __global__ void bsr_vector_kernel(
     // Multiply dense block by dense vector
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
-        // result[idx * 8 + j] += block[j][k] * x[col + k];
-        const VALUE tmp = block[j][k];
-        // const VALUE tmp2 = x[col + k];
-        const VALUE tmp3 = result[idx * 8 + j];
+        result[idx * 8 + j] += block[j][k];
+        // const VALUE tmp = block[j][k];
+        // // const VALUE tmp2 = x[col + k];
+        // const VALUE tmp3 = result[idx * 8 + j];
 
-        if (k > 9) {
-          printf("%f %f %d\n", tmp, tmp3, col);
-        }
+        // if (k > 9) {
+        //   printf("%f %f %d\n", tmp, tmp3, col);
+        // }
       }
     }
   }
