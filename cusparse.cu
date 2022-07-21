@@ -271,6 +271,9 @@ int main(int argc, char *argv[]){
   A_csr.colIdx = d_colIdx;
   A_csr.rowPtr = d_rowPtr;
 
+  VALUE *d_res;
+  CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
+
   cusparseCreateCsr(
     &matA,
     A_csr.filN,
@@ -288,9 +291,6 @@ int main(int argc, char *argv[]){
   // Create dense vector y
   cusparseCreateDnVec(&vecY, A_csr.colN, d_res, CUDA_R_32F);
 
-  VALUE *d_res;
-  CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
-
   float alpha = 1.0f;
   float beta = 0.0f;
 
@@ -306,10 +306,10 @@ int main(int argc, char *argv[]){
     CUSPARSE_MV_ALG_DEFAULT, dBuffer
   );
 
-  cudasparseDestroySpMat(matA);
-  cudasparseDestroyDnVec(vecX);
-  cudasparseDestroyDnVec(vecY);
-  cudasparseDestroy(handle);
+  cusparseDestroySpMat(matA);
+  cusparseDestroyDnVec(vecX);
+  cusparseDestroyDnVec(vecY);
+  cusparseDestroy(handle);
 
   VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
   CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
