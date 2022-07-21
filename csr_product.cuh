@@ -73,10 +73,7 @@ __global__ void bsr_vector_kernel(
     // Multiply dense block by dense vector
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
-        // result[idx + j] += block[j][k] * x[col + k];
-        const VALUE hola = result[idx + j];
-        const VALUE hola2 = block[j][k];
-        const VALUE hola3 = x[col + k];
+        result[idx * 8 + j] += block[j][k] * x[col + k];
       }
     }
   }
