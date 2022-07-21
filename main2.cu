@@ -191,17 +191,12 @@ int main(int argc, char *argv[]){
 
   gen_matriz_bloques(&A, blFilN, blColN);
 
-  // print_matriz_bloques(&A);
-  // print_matriz_bloques_en_COO(&A);
-
-  // print_CSR(&A_csr);
-
   VALUE *vector = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
 
   random_vector(vector, A.blColN);
 
   VALUE *d_res;
-  CUDA_CHK(cudaMalloc((void **)&d_res, A.blColN*sizeof(VALUE)));
+  CUDA_CHK(cudaMalloc((void **)&d_res, A.blColN*8*sizeof(VALUE)));
 
   int *d_blStart;
   CUDA_CHK(cudaMalloc((void **)&d_blStart, A.nBlocks*sizeof(int)));
