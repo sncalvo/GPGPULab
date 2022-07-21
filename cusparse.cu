@@ -19,7 +19,7 @@ void cusparse_csrmv (
     int *col_ids,
     int rows,
     int cols,
-    int nns,
+    int nnz,
     float * x,
     float * y
 ) {

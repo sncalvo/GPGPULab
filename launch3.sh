@@ -18,7 +18,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution3
 
-nvcc ./cusparse.cu -lcusparse_static -o solution3
+nvcc ./cusparse.cu -lcusparse -o solution3
 
 # cuda-memcheck ./solution2 10000 10000
 
