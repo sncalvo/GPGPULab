@@ -12,36 +12,6 @@
 #define TIME(t_i,t_f) ((double) t_f.tv_sec * 1000.0 + (double) t_f.tv_usec / 1000.0) - \
                       ((double) t_i.tv_sec * 1000.0 + (double) t_i.tv_usec / 1000.0);
 
-// void cusparse_csrmv (
-//     cusparseHandle_t &handle,
-//     const float *A,
-//     int *row_ptr,
-//     int *col_ids,
-//     int rows,
-//     int cols,
-//     int nnz,
-//     float * x,
-//     float * y
-// ) {
-//   const float alpha = 1.0;
-//   const float beta = 0.0;
-  // cusparseScsrmv(
-  //   handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
-  //   rows, cols, nnz,
-  //   &alpha, 0,
-  //   A, row_ptr, col_ids,
-  //   x, &beta, y
-  // );
-
-  // cusparseSPMM(
-  //   handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
-  //   &alpha, 0,
-  //   rows, cols, nnz,
-  //   A, row_ptr, col_ids,
-  //   x, &beta, y
-  // );
-// }
-
 #define CHECK_CUSPARSE(func)                                                   \
 {                                                                              \
     cusparseStatus_t status = (func);                                          \
@@ -236,8 +206,6 @@ int main(int argc, char *argv[]){
   void *dBuffer;
   size_t bufferSize = 0;
 
-  cusparseMatDescr_t descr_A;
-
   BlMat A;
 
   gen_matriz_bloques(&A, blFilN, blColN);
@@ -305,8 +273,6 @@ int main(int argc, char *argv[]){
   ));
   CUDA_CHK(cudaMalloc(&dBuffer, bufferSize));
 
-  printf("bufferSize: %d\n", bufferSize);
-
   CHECK_CUSPARSE(cusparseSpMV(
     handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     &alpha, matA, vecX, &beta, vecY, CUDA_R_32F,
@@ -320,24 +286,6 @@ int main(int argc, char *argv[]){
 
   VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
   CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
-  // cusparse_csrmv(
-  //   handle,
-  //   A_csr.val,
-  //   A_csr.rowPtr,
-  //   A_csr.colIdx,
-  //   A_csr.filN,
-  //   A_csr.colN,
-  //   A.nnz,
-  //   d_vector,
-  //   d_res
-  // );
-
-
-
-  // CUDA_CHK(cudaGetLastError());
-  // CUDA_CHK(cudaDeviceSynchronize());
-
-  // cusparseDestroy(handle);
 
   printf("\n");
 
