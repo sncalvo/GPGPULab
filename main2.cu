@@ -207,8 +207,8 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMemcpy(d_blColIdx, A.blColIdx, A.blColN*sizeof(int), cudaMemcpyHostToDevice));
 
   unsigned long long *d_blBmp;
-  CUDA_CHK(cudaMalloc((void **)&d_blBmp, A.nBlocks*sizeof(unsigned long long)));
-  CUDA_CHK(cudaMemcpy(d_blBmp, A.blBmp, A.nBlocks*sizeof(unsigned long long), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMalloc((void **)&d_blBmp, A.blColN*sizeof(unsigned long long)));
+  CUDA_CHK(cudaMemcpy(d_blBmp, A.blBmp, A.blColN*sizeof(unsigned long long), cudaMemcpyHostToDevice));
 
   int *d_blRowPtr;
   CUDA_CHK(cudaMalloc((void **)&d_blRowPtr, A.blFilN*sizeof(int)));
