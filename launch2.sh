@@ -20,26 +20,28 @@ rm ./solution2
 
 nvcc ./main2.cu -o solution2
 
-./solution2 10 10
+cuda-memcheck ./solution2 10000 10000
 
-echo '============================'
-echo 'NORMAL RUN STARTING'
-echo '============================'
+# ./solution2 10 10
 
-./solution2 10000 10000
+# echo '============================'
+# echo 'NORMAL RUN STARTING'
+# echo '============================'
 
-echo '============================'
-echo 'TESTING TIME'
-echo '============================'
+# ./solution2 10000 10000
 
-nvprof ./solution2 10000 10000
+# echo '============================'
+# echo 'TESTING TIME'
+# echo '============================'
 
-echo '============================'
-echo 'TESTING EFFICIENCY'
-echo '============================'
+# nvprof ./solution2 10000 10000
 
-nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution2 10000 10000
+# echo '============================'
+# echo 'TESTING EFFICIENCY'
+# echo '============================'
 
-echo '============================'
-echo 'END'
-echo '============================'
+# nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution2 10000 10000
+
+# echo '============================'
+# echo 'END'
+# echo '============================'
