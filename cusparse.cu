@@ -14,10 +14,9 @@
 
 void cusparse_csrmv (
     cusparseHandle_t &handle,
-    cusparseMatDescr_t descr_A,
     const float *A,
-    const unsigned int *row_ptr,
-    const unsigned int *col_ids,
+    int *row_ptr,
+    int *col_ids,
     int rows,
     int cols,
     int nns,
@@ -30,7 +29,7 @@ void cusparse_csrmv (
     handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     rows, cols, nnz,
     &alpha, 0,
-    A, reinterpret_cast<const int *> (row_ptr), reinterpret_cast<const int *> (col_ids),
+    A, row_ptr, col_ids,
     x, &beta, y
   );
 }
@@ -263,7 +262,6 @@ int main(int argc, char *argv[]){
 
   cusparse_csrmv(
     handle,
-    CUSPARSE_OPERATION_NON_TRANSPOSE,
     A_csr.val,
     A_csr.rowPtr,
     A_csr.colIdx,
