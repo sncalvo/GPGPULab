@@ -27,4 +27,4 @@ echo 'NORMAL RUN STARTING'
 echo '============================'
 
 # cuda-memcheck ./solution3 10000 10000
-./solution3 10000 10000
+./solution3 10 10
