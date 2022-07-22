@@ -26,7 +26,7 @@ echo '============================'
 echo 'NORMAL RUN STARTING'
 echo '============================'
 
-./solution2 8 8
+./solution2 10000 10000
 
 # echo '============================'
 # echo 'TESTING TIME'
