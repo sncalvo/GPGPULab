@@ -58,7 +58,6 @@ __global__ void bsr_vector_kernel(
     VALUE block[8][8];
     unsigned long long bitMap = A.blBmp[i];
     const int start = A.blStart[i];
-    const int end = A.blStart[i + 1];
 
     int index = 0;
     for (int j = 0; j < 8; j++) {
