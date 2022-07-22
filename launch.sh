@@ -28,14 +28,30 @@ echo '============================'
 echo 'TESTING TIME'
 echo '============================'
 
-nvprof ./solution 10000 10000
+# nvprof ./solution 10000 10000
 
-echo '============================'
-echo 'TESTING EFFICIENCY'
-echo '============================'
+# echo '============================'
+# echo 'TESTING EFFICIENCY'
+# echo '============================'
 
-nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution 10000 10000
+# nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution 10000 10000
 
-echo '============================'
-echo 'END'
-echo '============================'
+# echo '============================'
+# echo 'END'
+# echo '============================'
+
+tests=( 100 1000 10000 100000 1000000 10000000 )
+
+for test in "${tests[@]}"
+do
+  echo '============================'
+  echo 'TESTING TIME WITH ARG $test'
+  echo '============================'
+
+  nvprof ./solution $test $test
+
+  echo '============================'
+  echo 'TESTING EFFICIENCY WITH $test END'
+  echo '============================'
+  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution $test $test
+done
