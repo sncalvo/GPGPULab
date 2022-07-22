@@ -199,7 +199,7 @@ int main(int argc, char *argv[]){
 
   int *d_blStart;
   CUDA_CHK(cudaMalloc((void **)&d_blStart, (A.nBlocks+1)*sizeof(int)));
-  CUDA_CHK(cudaMemcpy(d_blStart, A.blStart, (A.nBlock+1)s*sizeof(int), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMemcpy(d_blStart, A.blStart, (A.nBlocks+1)*sizeof(int), cudaMemcpyHostToDevice));
 
   int *d_blColIdx;
   CUDA_CHK(cudaMalloc((void **)&d_blColIdx, A.nBlocks*sizeof(int)));
