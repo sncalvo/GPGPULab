@@ -198,8 +198,8 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMalloc((void **)&d_res, A.blColN*8*sizeof(VALUE)));
 
   int *d_blStart;
-  CUDA_CHK(cudaMalloc((void **)&d_blStart, A.nBlocks*sizeof(int)));
-  CUDA_CHK(cudaMemcpy(d_blStart, A.blStart, A.nBlocks*sizeof(int), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMalloc((void **)&d_blStart, (A.nBlocks+1)*sizeof(int)));
+  CUDA_CHK(cudaMemcpy(d_blStart, A.blStart, (A.nBlock+1)s*sizeof(int), cudaMemcpyHostToDevice));
 
   int *d_blColIdx;
   CUDA_CHK(cudaMalloc((void **)&d_blColIdx, A.nBlocks*sizeof(int)));
@@ -210,8 +210,8 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMemcpy(d_blBmp, A.blBmp, A.nBlocks*sizeof(unsigned long long), cudaMemcpyHostToDevice));
 
   int *d_blRowPtr;
-  CUDA_CHK(cudaMalloc((void **)&d_blRowPtr, A.blFilN*sizeof(int)));
-  CUDA_CHK(cudaMemcpy(d_blRowPtr, A.blRowPtr, A.blFilN*sizeof(int), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMalloc((void **)&d_blRowPtr, (A.blFilN+1)*sizeof(int)));
+  CUDA_CHK(cudaMemcpy(d_blRowPtr, A.blRowPtr, (A.blFilN+1)*sizeof(int), cudaMemcpyHostToDevice));
 
   VALUE *d_val;
   CUDA_CHK(cudaMalloc((void **)&d_val, A.nnz*sizeof(VALUE)));
@@ -229,7 +229,7 @@ int main(int argc, char *argv[]){
 
 	dim3 dimBlock(256);
   // Fast ceil(A_csr.colN/256)
-	dim3 dimGrid((A.blFilN + 256 - 1) / 256);
+	dim3 dimGrid((A.blFilN + 1 + 256 - 1) / 256);
 
   // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
   bsr_vector_kernel<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
