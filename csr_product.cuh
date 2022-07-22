@@ -80,50 +80,51 @@ __global__ void bsr_vector_kernel(
   }
 }
 
-// // Kernel that implements spmv product using Block CSR matrix
-// __global__ void bsr_vector_kernel_2(
-//   BlMat A,
-//   const VALUE *x,
-//   VALUE *result
-// ) {
-//   const int idx = blockIdx.x * blockDim.x;
+// Kernel that implements spmv product using Block CSR matrix
+__global__ void bsr_vector_kernel_2(
+  BlMat A,
+  const VALUE *x,
+  VALUE *result
+) {
+  const int idx = blockIdx.x * blockDim.x;
 
-//   if (idx >= A.blFilN + 1) {
-//     return;
-//   }
+  if (idx >= A.blFilN + 1) {
+    return;
+  }
 
-//   const int i = A.blRowPtr[idx] + threadIdx.x;
-//   const int rowEnd = A.blRowPtr[idx + 1];
+  const int i = A.blRowPtr[idx] + threadIdx.x;
+  const int rowEnd = A.blRowPtr[idx + 1];
 
-//   if (i >= rowEnd) {
-//     return;
-//   }
+  if (i >= rowEnd) {
+    return;
+  }
 
-//   for (int i = rowStart; i < rowEnd; i++) {
-//     const int col = A.blColIdx[i];
+  // for (int i = rowStart; i < rowEnd; i++) {
+  const int col = A.blColIdx[i];
 
-//     // Create dense block
-//     VALUE block[8][8];
-//     unsigned long long bitMap = A.blBmp[i];
-//     const int start = A.blStart[i];
+  // Create dense block
+  VALUE block[8][8];
+  unsigned long long bitMap = A.blBmp[i];
+  const int start = A.blStart[i];
 
-//     int index = 0;
-//     for (int j = 0; j < 8; j++) {
-//       for (int k = 0; k < 8; k++) {
-//         if (bitMap & (0x8000000000000000 >> (j*8 + k))) {
-//           block[j][k] = A.val[start + index];
-//           index += 1;
-//         } else {
-//           block[j][k] = 0;
-//         }
-//       }
-//     }
+  int index = 0;
+  for (int j = 0; j < 8; j++) {
+    for (int k = 0; k < 8; k++) {
+      if (bitMap & (0x8000000000000000 >> (j*8 + k))) {
+        block[j][k] = A.val[start + index];
+        index += 1;
+      } else {
+        block[j][k] = 0;
+      }
+    }
+  }
 
-//     // Multiply dense block by dense vector
-//     for (int j = 0; j < 8; j++) {
-//       for (int k = 0; k < 8; k++) {
-//         result[idx * 8 + j] += block[j][k] * x[col + k];
-//       }
-//     }
-//   }
-// }
+  // Multiply dense block by dense vector
+  for (int j = 0; j < 8; j++) {
+    for (int k = 0; k < 8; k++) {
+      // result[idx * 8 + j] += block[j][k] * x[col + k];
+      atomicAdd(&result[idx * 8 + j], block[j][k] * x[col + k]);
+    }
+  }
+  // }
+}
