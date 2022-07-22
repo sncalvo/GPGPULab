@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=mitrabajo
 #SBATCH --ntasks=1
-#SBATCH --mem=8192
+#SBATCH --mem=12288
 #SBATCH --time=00:10:00
 
 #SBATCH --partition=besteffort
@@ -40,7 +40,7 @@ echo '============================'
 # echo 'END'
 # echo '============================'
 
-tests=( 100 1000 10000 100000 1000000 10000000 )
+tests=( 100 1000 10000 20000 30000 40000 )
 
 for test in "${tests[@]}"
 do
