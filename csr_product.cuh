@@ -86,13 +86,13 @@ __global__ void bsr_vector_kernel_2(
   const VALUE *x,
   VALUE *result
 ) {
-  const int idx = blockIdx.x * blockDim.x;
+  const int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
   if (idx >= A.blFilN + 1) {
     return;
   }
 
-  const int i = A.blRowPtr[idx] + threadIdx.x;
+  const int i = A.blRowPtr[idx] + threadIdx.y;
   const int rowEnd = A.blRowPtr[idx + 1];
 
   if (i >= rowEnd) {
