@@ -44,7 +44,7 @@ __global__ void bsr_vector_kernel(
 ) {
   const int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
-  if (idx + 1 >= A.blFilN) {
+  if (idx >= A.blFilN) {
     return;
   }
 
