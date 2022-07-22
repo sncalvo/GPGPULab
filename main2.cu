@@ -172,7 +172,7 @@ void print_CSR(CSRMat *A_csr) {
 
 void random_vector(VALUE *v, int n) {
   for (int i = 0; i < n; ++i)
-    v[i] = i;
+    v[i] = 1.0;
 }
 
 int main(int argc, char *argv[]){
