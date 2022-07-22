@@ -39,5 +39,5 @@ do
   echo '============================'
   echo 'TESTING EFFICIENCY WITH $test END'
   echo '============================'
-  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution $test $test
+  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution3 $test $test
 done
