@@ -230,7 +230,7 @@ int main(int argc, char *argv[]){
 
 	dim3 dimBlock(256);
   // Fast ceil(A_csr.colN/256)
-	dim3 dimGrid((A.blFilN + 256) / 256);
+	dim3 dimGrid((A.blFilN + 2*256 - 1) / 256);
 
   // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
   bsr_vector_kernel<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
