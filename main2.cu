@@ -47,7 +47,10 @@ void gen_matriz_bloques(BlMat *A, int blFilN, int blColN) {
   for (int i = 1; i < n_bl+1; ++i) {
     ctr += 1 + rand()%20;
     A->blStart[i] = ctr;
+
+    printf("%d ", A->blStart[i]);
   }
+  printf("\n");
 
   A->nnz=ctr;
 
