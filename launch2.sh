@@ -28,18 +28,18 @@ echo '============================'
 
 ./solution2 10000 10000
 
-echo '============================'
-echo 'TESTING TIME'
-echo '============================'
+# echo '============================'
+# echo 'TESTING TIME'
+# echo '============================'
 
-nvprof ./solution2 10000 10000
+# nvprof ./solution2 10000 10000
 
-echo '============================'
-echo 'TESTING EFFICIENCY'
-echo '============================'
+# echo '============================'
+# echo 'TESTING EFFICIENCY'
+# echo '============================'
 
-nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution2 10000 10000
+# nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution2 10000 10000
 
-echo '============================'
-echo 'END'
-echo '============================'
+# echo '============================'
+# echo 'END'
+# echo '============================'
