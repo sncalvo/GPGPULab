@@ -123,7 +123,7 @@ __global__ void bsr_vector_kernel_2(
   for (int j = 0; j < 8; j++) {
     for (int k = 0; k < 8; k++) {
       // result[idx * 8 + j] += block[j][k] * x[col + k];
-      atomicAdd(&result[idx * 8 + j], block[j][k] * x[col + k]);
+      atomicAdd(&result[idx * 8 + j], block[j][k] * x[col * 8 + k]);
     }
   }
   // }
