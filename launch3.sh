@@ -26,5 +26,18 @@ echo '============================'
 echo 'NORMAL RUN STARTING'
 echo '============================'
 
-# cuda-memcheck ./solution3 10000 10000
-./solution3 10 10
+tests=( 100 1000 10000 20000 50000 )
+
+for test in "${tests[@]}"
+do
+  echo '============================'
+  echo 'TESTING TIME WITH ARG $test'
+  echo '============================'
+
+  nvprof ./solution3 $test $test
+
+  echo '============================'
+  echo 'TESTING EFFICIENCY WITH $test END'
+  echo '============================'
+  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution $test $test
+done
