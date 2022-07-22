@@ -47,11 +47,7 @@ void gen_matriz_bloques(BlMat *A, int blFilN, int blColN) {
   for (int i = 1; i < n_bl+1; ++i) {
     ctr += 1 + rand()%20;
     A->blStart[i] = ctr;
-
-    printf("%d ", A->blStart[i]);
   }
-  printf("\n");
-
   A->nnz=ctr;
 
   // genero valores
@@ -229,7 +225,7 @@ int main(int argc, char *argv[]){
 
   VALUE *d_vector;
   CUDA_CHK(cudaMalloc((void **)&d_vector, A.blColN*8*sizeof(VALUE)));
-  CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*sizeof(VALUE), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*8*sizeof(VALUE), cudaMemcpyHostToDevice));
 
 	dim3 dimBlock(256);
   // Fast ceil(A_csr.colN/256)
