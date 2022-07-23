@@ -92,7 +92,7 @@ __global__ void bsr_vector_kernel(
       result[idx * 8 + j] = sumRow;
       printf("\n");
       if (idx == 1) {
-        printf("%f ", result[idx * 8 + j]);
+        printf("%.1f %.1f\n", result[idx * 8 + j], sumRow);
       }
     }
   }
