@@ -159,7 +159,7 @@ __global__ void bsr_vector_kernel_3(
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
     block[j][i] = A.val[start + numberOfVals];
 
-    printf("ThreadY: %d, RowStart: %d, RowEnd: %d", threadIdx.y, rowStart, rowEnd);
+    printf("ThreadY: %d, RowStart: %d, RowEnd: %d\n", threadIdx.y, rowStart, rowEnd);
     atomicAdd(&result[idx * 8 + j], A.val[start + numberOfVals] * x[col * 8 + i]);
   } else {
     block[j][i] = 0;
