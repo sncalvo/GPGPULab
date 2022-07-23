@@ -168,6 +168,12 @@ __global__ void bsr_vector_kernel_3(
   __syncthreads();
   // printf("%d %d %.2f %d Bitmap:%llu Mask:%llu \n", j, i, block[j][i], numberOfVals, bitMap, bitMap & (0x8000000000000000 >> (j*8 + i)));
   // 34
+
+  // if (block[j][i] * x[col * 8 + i] != 0) {
+  //   printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], idx * 8 + j);
+  // }
+
+  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
   if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
     for (int j = 0; j < 8; j++) {
     }
@@ -182,10 +188,4 @@ __global__ void bsr_vector_kernel_3(
       block[6][0], block[6][1], block[6][2], block[6][3], block[6][4], block[6][5], block[6][6], block[6][7],
       block[7][0], block[7][1], block[7][2], block[7][3], block[7][4], block[7][5], block[7][6], block[7][7]);
   }
-
-  // if (block[j][i] * x[col * 8 + i] != 0) {
-  //   printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], idx * 8 + j);
-  // }
-
-  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
 }
