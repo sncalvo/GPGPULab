@@ -122,7 +122,7 @@ __global__ void bsr_vector_kernel_3(
       }
 
       if (sumRow != 0) {
-        printf("%d %d %d %d %f\n", rowIdx, col, k, l, sumRow);
+        printf("%d %d %d %f\n", rowIdx, col, k, sumRow);
         atomicAdd(&result[rowIdx * 8 + k], sumRow);
       }
     }
