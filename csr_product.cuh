@@ -89,10 +89,10 @@ __global__ void bsr_vector_kernel_3(
   __shared__ VALUE block[8][8];
 
   if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0) {
-    for (int i = 0; i < A.blColN * 8; i++) {
-      printf("%f ", x[i]);
-    }
-    printf("\n");
+    // for (int i = 0; i < A.blColN * 8; i++) {
+    //   printf("%f ", x[i]);
+    // }
+    // printf("\n");
 
     // Print matrix
     // for (int i = 0; i < A.nnz; i++) {
