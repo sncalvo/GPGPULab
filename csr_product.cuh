@@ -87,13 +87,9 @@ __global__ void bsr_vector_kernel(
       VALUE sumRow = 0;
       for (int k = 0; k < 8; k++) {
         sumRow += block[j][k] * x[col * 8 + k];
-        printf("%f ", block[j][k]);
+        printf("%f %f \n", block[j][k], x[col * 8 + k]);
       }
       result[idx * 8 + j] = sumRow;
-      printf("\n");
-      if (idx == 1) {
-        printf("%.1f %.1f\n", result[idx * 8 + j], sumRow);
-      }
     }
   }
 }
