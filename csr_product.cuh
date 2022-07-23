@@ -160,7 +160,7 @@ __global__ void bsr_vector_kernel_3(
   __shared__ unsigned long long bmp[1024];
 
   colIdx[threadIdx.y] = A.blColIdx[rowStart];
-  start[threadIdx.y] = A.blStart[rowStart];
+  startIdx[threadIdx.y] = A.blStart[rowStart];
   bmp[threadIdx.y] = A.blBmp[rowStart];
 
   __syncthreads();
