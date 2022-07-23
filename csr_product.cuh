@@ -97,7 +97,7 @@ __global__ void bsr_vector_kernel_3(
     printf("\n");
     // Print matrix
     for (int i = 0; i < A.nnz; i++) {
-      printf("idx: %d, %f \n\n", i, A.val[i]);
+      printf("idx: %d, %f \n", i, A.val[i]);
     }
   }
 
