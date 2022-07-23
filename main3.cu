@@ -190,7 +190,6 @@ int main(int argc, char *argv[]){
 
   gen_matriz_bloques(&A, blFilN, blColN);
 
-  print_matriz_bloques_en_COO(&A);
   printf("\n \n \n");
 
   VALUE *vector = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
