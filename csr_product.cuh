@@ -142,7 +142,7 @@ __global__ void bsr_vector_kernel_3(
 
   const int rowIdx = blockIdx.x;
   const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
-  const int rowEnd = A.blRowPtr[idx + 1];
+  const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   if (rowStart >= rowEnd) {
     return;
