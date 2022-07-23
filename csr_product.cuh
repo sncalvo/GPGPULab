@@ -172,9 +172,9 @@ __global__ void bsr_vector_kernel_3(
   // printf("%d %d %.2f %d Bitmap:%llu Mask:%llu \n", j, i, block[j][i], numberOfVals, bitMap, bitMap & (0x8000000000000000 >> (j*8 + i)));
   // 34
 
-  // if (block[j][i] * x[col * 8 + i] != 0) {
-  //   printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], idx * 8 + j);
-  // }
+  if (block[j][i] * x[col * 8 + i] != 0) {
+    printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], idx * 8 + j);
+  }
 
   // atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
   // if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
