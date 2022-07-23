@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
 
   gen_matriz_bloques(&A, blFilN, blColN);
 
-  VALUE *vector = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
+  VALUE *vector = (VALUE*) malloc(A.nnz*sizeof(VALUE));
 
   random_vector(vector, A.nnz);
 
@@ -57,8 +57,8 @@ int main(int argc, char *argv[]){
   A.val = d_val;
 
   VALUE *d_vector;
-  CUDA_CHK(cudaMalloc((void **)&d_vector, A.blColN*8*sizeof(VALUE)));
-  CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*8*sizeof(VALUE), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMalloc((void **)&d_vector, A.nnz*sizeof(VALUE)));
+  CUDA_CHK(cudaMemcpy(d_vector, vector, A.nnz*sizeof(VALUE), cudaMemcpyHostToDevice));
 
 	dim3 dimBlock(256);
   // Fast ceil(A_csr.colN/256)
