@@ -122,7 +122,7 @@ __global__ void bsr_vector_kernel_3(
 
   // Print block
   // if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
-  if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+  if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && threadIdx.x == 0) {
     printf("HOLAAAA \n");
     printf("\n");
     for (int k = 0; k < 8; k++) {
