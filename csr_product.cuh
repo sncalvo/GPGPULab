@@ -88,7 +88,7 @@ __global__ void bsr_vector_kernel_3(
 ) {
   __shared__ VALUE block[8][8];
 
-  if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0) {
+  if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
     // for (int i = 0; i < A.blColN * 8; i++) {
     //   printf("%f ", x[i]);
     // }
@@ -97,9 +97,8 @@ __global__ void bsr_vector_kernel_3(
     printf("\n");
     // Print matrix
     for (int i = 0; i < A.nnz; i++) {
-      printf("idx: %d, %f \n", i, A.val[i]);
+      printf("idx: %d, %f \n\n", i, A.val[i]);
     }
-    printf("\n");
   }
 
   const int i = threadIdx.x;
@@ -123,7 +122,6 @@ __global__ void bsr_vector_kernel_3(
 
   // printf("%llu\n", bitMap);
   // printf("%llu --- %s,\n", bitMap & (0x8000000000000000 >> (j*8 + i)), bitMap & (0x8000000000000000 >> (j*8 + i)) ? "true" : "false");
-  printf("\n");
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
     printf("Writing: %.2f, idx %d\n", A.val[start + numberOfVals], start + numberOfVals);
     block[j][i] = A.val[start + numberOfVals];
