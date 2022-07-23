@@ -92,7 +92,7 @@ __global__ void bsr_vector_kernel_3(
     for (int i = 0; i < A.blColN * 8; i++) {
       printf("%f ", x[i]);
     }
-    printf("\n", x[i]);
+    printf("\n");
   }
 
   const int i = threadIdx.x;
