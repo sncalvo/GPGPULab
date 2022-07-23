@@ -27,13 +27,9 @@ int main(int argc, char *argv[]){
 
   bloques_a_CSR(&A, &A_csr);
 
-  printf("\n \n \n");
-
-  // print_matriz_bloques_en_COO(&A);
-
   VALUE *vector = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
 
-  random_vector(vector, A.blColN * 8);
+  random_vector(vector, A_csr.colN);
 
   VALUE *d_res;
   CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));

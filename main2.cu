@@ -65,10 +65,8 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMemcpy(d_vector, vector, A_csr.colN*sizeof(VALUE), cudaMemcpyHostToDevice));
 
 	dim3 dimBlock(256);
-  // Fast ceil(A_csr.colN/256)
-	dim3 dimGrid((A.blFilN + 1 + 256 - 1) / 256);
+	dim3 dimGrid((A.blFilN + 1 + 256 - 1) / 256); // Fast ceil(A_csr.colN/256)
 
-  // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
   bsr_vector_kernel<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
 
   CUDA_CHK(cudaGetLastError());
