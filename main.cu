@@ -247,7 +247,7 @@ int main(int argc, char *argv[]){
 
   printf("\n");
 
-  for (int i = 0; i < 5; ++i)
+  for (int i = 0; i < 10 * 8; ++i)
   {
     printf("%.2f\n", res[i]);
   }
