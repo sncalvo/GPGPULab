@@ -166,7 +166,7 @@ __global__ void bsr_vector_kernel_3(
   // }
 
   __syncthreads();
-  printf("%d %d %.2f %d Bitmap:%llu Mask:%llu \n", j, i, block[j][i], numberOfVals, bitMap, bitMap & (0x8000000000000000 >> (j*8 + i)));
+  // printf("%d %d %.2f %d Bitmap:%llu Mask:%llu \n", j, i, block[j][i], numberOfVals, bitMap, bitMap & (0x8000000000000000 >> (j*8 + i)));
   // 34
   // if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
   //   for (int j = 0; j < 8; j++) {
