@@ -88,53 +88,6 @@ __global__ void bsr_vector_kernel_3(
 ) {
   __shared__ VALUE block[8][8];
 
-  if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
-    // for (int i = 0; i < A.blColN * 8; i++) {
-    //   printf("%f ", x[i]);
-    // }
-    // printf("\n");
-
-    printf("\n");
-    // Print matrix
-    for (int i = 0; i < A.nnz; i++) {
-      printf("idx: %d, %f \n", i, A.val[i]);
-    }
-
-    // Print blStart
-    printf("\n");
-    for (int i = 0; i < A.nBlocks + 1; i++) {
-      printf("%d ", A.blStart[i]);
-    }
-    printf("\n");
-
-    // Print blColIdx
-    printf("\n");
-    for (int i = 0; i < A.nBlocks; i++) {
-      printf("%d ", A.blColIdx[i]);
-    }
-    printf("\n");
-
-    // Print blBmp
-    printf("\n");
-    for (int i = 0; i < A.nBlocks; i++) {
-      printf("%llu ", A.blBmp[i]);
-    }
-    printf("\n");
-
-    // Print blRowPtr
-    printf("\n");
-    for (int i = 0; i < A.blFilN + 1; i++) {
-      printf("%d ", A.blRowPtr[i]);
-    }
-    printf("\n");
-
-    printf("\n");
-    printf("%d \n", A.blFilN);
-    printf("%d \n", A.blColN);
-    printf("\n");
-  }
-  __syncthreads();
-
   const int i = threadIdx.x;
   const int j = threadIdx.y;
 
@@ -168,7 +121,8 @@ __global__ void bsr_vector_kernel_3(
   // printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
 
   // Print block
-  if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+  // if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+  if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 1) {
     printf("\n");
     for (int k = 0; k < 8; k++) {
       for (int l = 0; l < 8; l++) {
@@ -184,12 +138,12 @@ __global__ void bsr_vector_kernel_3(
       VALUE sumRow = 0;
       for (int l = 0; l < 8; l++) {
         sumRow += block[k][l] * x[col * 8 + l];
-        if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+        if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 1) {
           printf("%.1f + ", block[k][l] * x[col * 8 + l]);
         }
       }
 
-      if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+      if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 1 {
         printf(": %.1f \n", sumRow);
       }
 
