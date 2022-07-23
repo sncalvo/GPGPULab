@@ -86,6 +86,7 @@ __global__ void bsr_vector_kernel(
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
         result[idx * 8 + j] += block[j][k] * x[col * 8 + k];
+        printf("%f ", block[j][k]);
       }
       if (idx == 1) {
         printf("%f ", result[idx * 8 + j]);
