@@ -95,10 +95,10 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
-  if (rowStart >= rowEnd) {
-    block[j][i] = 0;
-    return;
-  }
+  // if (rowStart >= rowEnd) {
+  //   block[j][i] = 0;
+  //   return;
+  // }
 
   const int col = A.blColIdx[rowStart];
 
