@@ -18,26 +18,26 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution3
 
-nvcc --version
-
 nvcc ./cusparse.cu -lcusparse -o solution3
 
-echo '============================'
-echo 'NORMAL RUN STARTING'
-echo '============================'
+./solution3 10 10
 
-tests=( 100 1000 10000 20000 50000 )
+# echo '============================'
+# echo 'NORMAL RUN STARTING'
+# echo '============================'
 
-for test in "${tests[@]}"
-do
-  echo '============================'
-  echo 'TESTING TIME WITH ARG $test'
-  echo '============================'
+# tests=( 100 1000 10000 20000 50000 )
 
-  nvprof ./solution3 $test $test
+# for test in "${tests[@]}"
+# do
+#   echo '============================'
+#   echo 'TESTING TIME WITH ARG $test'
+#   echo '============================'
 
-  echo '============================'
-  echo 'TESTING EFFICIENCY WITH $test END'
-  echo '============================'
-  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution3 $test $test
-done
+#   nvprof ./solution3 $test $test
+
+#   echo '============================'
+#   echo 'TESTING EFFICIENCY WITH $test END'
+#   echo '============================'
+#   nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution3 $test $test
+# done
