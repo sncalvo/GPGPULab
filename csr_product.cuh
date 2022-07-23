@@ -86,7 +86,7 @@ __global__ void bsr_vector_kernel_3(
   const VALUE *x,
   VALUE *result
 ) {
-  printf("i: %d, j: %d", blockIdx.x * blockDim.x + threadIdx.x, blockIdx.y * blockDim.y + threadIdx.y);
+  printf("i: %d, j: %d\n", blockIdx.x * blockDim.x + threadIdx.x, blockIdx.y * blockDim.y + threadIdx.y);
   __shared__ VALUE block[8][8];
 
   const int i = threadIdx.x;
