@@ -157,7 +157,7 @@ __global__ void bsr_vector_kernel_3(
   // printf("%llu\n", bitMap);
   // printf("%llu --- %s,\n", bitMap & (0x8000000000000000 >> (j*8 + i)), bitMap & (0x8000000000000000 >> (j*8 + i)) ? "true" : "false");
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-    printf("Writing: %.2f, idx %d, col: %d, row: %d, start: %d, rowStart: %d, blockIdx: %d, x: %d, y: %d \n", A.val[start + numberOfVals], start + numberOfVals, col, rowIdx, start, rowStart, blockIdx.y, rowIdx * 8 + i, col * 8 + j);
+    printf("Writing: %.2f, idx %d, col: %d, row: %d, start: %d, rowStart: %d, blockIdx: %d, x: %d, y: %d \n", A.val[start + numberOfVals], start + numberOfVals, col, rowIdx, start, rowStart, blockIdx.y, rowIdx * 8 + j, col * 8 + i);
     block[j][i] = A.val[start + numberOfVals];
   } else {
     // block[j][i] = 0;
