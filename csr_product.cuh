@@ -145,9 +145,9 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[idx] + threadIdx.y / 8;
   const int rowEnd = A.blRowPtr[idx + 1];
 
-  // if (rowStart >= rowEnd) {
-  //   return;
-  // }
+  if (rowStart >= rowEnd) {
+    return;
+  }
 
   const int col = A.blColIdx[rowStart];
 
@@ -167,8 +167,8 @@ __global__ void bsr_vector_kernel_3(
   if (blockIdx.x == 3 && threadIdx.x == 7 && threadIdx.y == 7) {
     for (int j = 0; j < 8; j++) {
     }
-    printf("%d %d \n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n",
-      threadIdx.x, threadIdx.y,
+    printf("%d %d, %llu \n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n",
+      threadIdx.x, threadIdx.y, bitMap,
       block[0][0], block[0][1], block[0][2], block[0][3], block[0][4], block[0][5], block[0][6], block[0][7],
       block[1][0], block[1][1], block[1][2], block[1][3], block[1][4], block[1][5], block[1][6], block[1][7],
       block[2][0], block[2][1], block[2][2], block[2][3], block[2][4], block[2][5], block[2][6], block[2][7],
