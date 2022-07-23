@@ -93,7 +93,7 @@ __global__ void bsr_vector_kernel_3(
   const int j = threadIdx.y;
   const int rowIdx = blockIdx.x;
 
-  __shared__ shared_row_ptr[64];
+  __shared__ int shared_row_ptr[64];
   shared_row_ptr[threadIdx.x] = A.blRowPtr[rowIdx];
 
   __syncthreads();
@@ -106,10 +106,10 @@ __global__ void bsr_vector_kernel_3(
     return;
   }
 
-  __shared__ shared_col_idx[64];
-  __shared__ shared_val[64];
-  __shared__ shared_bmp[64];
-  __shared__ shared_start[64];
+  __shared__ int shared_col_idx[64];
+  __shared__ VALUE shared_val[64];
+  __shared__ unsigned long long shared_bmp[64];
+  __shared__ int shared_start[64];
 
   shared_col_idx[threadIdx.x] = A.blColIdx[rowStart];
   shared_bmp[threadIdx.x] = A.blBmp[rowStart];
