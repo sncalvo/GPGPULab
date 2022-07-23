@@ -166,5 +166,5 @@ __global__ void bsr_vector_kernel_3(
     block[j][i] = 0;
   }
 
-  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col + i]);
+  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
 }
