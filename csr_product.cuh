@@ -109,7 +109,7 @@ __global__ void bsr_vector_kernel_3(
 
     // Print blColIdx
     printf("\n");
-    for (int i = 0; i < A.nnz; i++) {
+    for (int i = 0; i < A.nBlocks; i++) {
       printf("%d ", A.blColIdx[i]);
     }
     printf("\n");
@@ -123,7 +123,7 @@ __global__ void bsr_vector_kernel_3(
 
     // Print blRowPtr
     printf("\n");
-    for (int i = 0; i < A.nBlocks + 1; i++) {
+    for (int i = 0; i < A.blFilN + 1; i++) {
       printf("%d ", A.blRowPtr[i]);
     }
     printf("\n");
