@@ -137,6 +137,14 @@ __global__ void bsr_vector_kernel_3(
 ) {
   __shared__ VALUE block[8][8];
 
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      block[i][j] = 0;
+    }
+  }
+
+  __syncthreads();
+
   const int i = threadIdx.x;
   const int j = threadIdx.y;
 
