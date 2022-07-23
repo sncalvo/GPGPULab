@@ -91,43 +91,26 @@ __global__ void bsr_vector_kernel_3(
 
   const int i = threadIdx.x;
   const int j = threadIdx.y;
+
   const int rowIdx = blockIdx.x;
-
-  __shared__ int shared_row_ptr[64];
-  shared_row_ptr[threadIdx.x] = A.blRowPtr[rowIdx];
-
-  __syncthreads();
-
-  const int rowStart = shared_row_ptr[threadIdx.x] + blockIdx.y;
-  const int rowEnd = shared_row_ptr[threadIdx.x + 1];
+  const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
+  const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   if (rowStart >= rowEnd) {
     block[j][i] = 0;
     return;
   }
 
-  __shared__ int shared_col_idx[64];
-  __shared__ VALUE shared_val[64];
-  __shared__ unsigned long long shared_bmp[64];
-  __shared__ int shared_start[64];
+  const int col = A.blColIdx[rowStart];
 
-  shared_col_idx[threadIdx.x] = A.blColIdx[rowStart];
-  shared_bmp[threadIdx.x] = A.blBmp[rowStart];
-  shared_start[threadIdx.x] = A.blStart[rowStart];
-  shared_val[threadIdx.x] = A.val[shared_start[threadIdx.x]];
-
-  __syncthreads();
-
-  const int col = shared_col_idx[threadIdx.x];
-
-  unsigned long long bitMap = shared_bmp[threadIdx.x];
-  const int start = shared_start[threadIdx.x];
-  const int end = shared_start[threadIdx.x + 1];
+  unsigned long long bitMap = A.blBmp[rowStart];
+  const int start = A.blStart[rowStart];
+  const int end = A.blStart[rowStart + 1];
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-    block[j][i] = shared_val[threadIdx.x + numberOfVals];
+    block[j][i] = A.val[start + numberOfVals];
   } else {
     block[j][i] = 0;
   }
