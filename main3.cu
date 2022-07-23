@@ -228,7 +228,7 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*8*sizeof(VALUE), cudaMemcpyHostToDevice));
 
 	dim3 dimBlock(8, 8);
-	dim3 dimGrid((A.blFilN+7)/8, A.blFilN);
+	dim3 dimGrid(A.blColN, A.blFilN);
 
   // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
   bsr_vector_kernel_3<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
