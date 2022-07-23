@@ -164,7 +164,7 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  if (blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 0) {
+  if (blockIdx.x == 0 && threadIdx.x == 7 && threadIdx.y == 7) {
     for (int j = 0; j < 8; j++) {
     }
     printf("%d %d \n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n %f %f %f %f %f %f %f %f\n",
