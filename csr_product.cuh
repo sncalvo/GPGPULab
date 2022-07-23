@@ -167,8 +167,8 @@ __global__ void bsr_vector_kernel_3(
   // }
 
   __syncthreads();
-
-  if (blockIdx.x == 3 && threadIdx.x == 7 && threadIdx.y == 7) {
+  // 34
+  if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
     for (int j = 0; j < 8; j++) {
     }
     printf("%d %d, %llu \n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n",
