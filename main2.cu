@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
   VALUE *vector = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
 
-  random_vector(vector, A.blColN);
+  random_vector(vector, A.nnz);
 
   VALUE *d_res;
   CUDA_CHK(cudaMalloc((void **)&d_res, A.blColN*8*sizeof(VALUE)));
