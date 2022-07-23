@@ -143,6 +143,7 @@ __global__ void bsr_vector_kernel_3(
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   if (rowStart >= rowEnd) {
+    block[j][i] = 0;
     return;
   }
 
@@ -160,7 +161,7 @@ __global__ void bsr_vector_kernel_3(
     printf("Writing: %.2f, idx %d, col: %d, row: %d, start: %d, rowStart: %d, blockIdx: %d\n", A.val[start + numberOfVals], start + numberOfVals, col, rowIdx, start, rowStart, blockIdx.y);
     block[j][i] = A.val[start + numberOfVals];
   } else {
-    // block[j][i] = 0;
+    block[j][i] = 0;
   }
 
   __syncthreads();
