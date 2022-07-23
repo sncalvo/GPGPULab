@@ -134,7 +134,7 @@ __global__ void bsr_vector_kernel_3(
     printf("\n");
   }
 
-  if (j == 0) {
+  if (j == 0 && i = 0) {
     for (int k = 0; k < 8; k++) {
       VALUE sumRow = 0;
       for (int l = 0; l < 8; l++) {
