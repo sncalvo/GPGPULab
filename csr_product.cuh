@@ -168,14 +168,14 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  // if (blockIdx.x == 0 && blockIdx.y == 0 && threadIdx.x == 0 && threadIdx.y == 40) {
+  if (blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 40) {
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
         printf("%f ", block[j][k]);
       }
       printf("\n");
     }
-  // }
+  }
 
   atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
 }
