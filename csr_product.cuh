@@ -143,7 +143,7 @@ __global__ void bsr_vector_kernel_3(
         }
       }
 
-      if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 1 {
+      if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 1) {
         printf(": %.1f \n", sumRow);
       }
 
