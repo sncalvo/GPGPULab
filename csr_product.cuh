@@ -118,10 +118,13 @@ __global__ void bsr_vector_kernel_3(
 
   if (j == 0) {
     for (int k = 0; k < 8; k++) {
+      VALUE sumRow = 0;
       for (int l = 0; l < 8; l++) {
-        if (block[k][l] != 0) {
-          atomicAdd(&result[rowIdx * 8 + k], block[k][l] * x[col * 8 + l]);
-        }
+        sumRow += block[k][l] * x[col * 8 + l];
+      }
+
+      if (sumRow != 0) {
+        atomicAdd(&result[rowIdx * 8 + k], sumRow);
       }
     }
   }
