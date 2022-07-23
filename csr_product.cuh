@@ -52,8 +52,6 @@ __global__ void bsr_vector_kernel(
   const int rowEnd = A.blRowPtr[idx + 1];
 
   for (int i = rowStart; i < rowEnd; i++) {
-    const int col = A.blColIdx[i];
-
     // Create dense block
     VALUE block[8][8];
     unsigned long long bitMap = A.blBmp[i];
@@ -71,13 +69,13 @@ __global__ void bsr_vector_kernel(
       }
     }
 
+    const int col = A.blColIdx[i];
     // Multiply dense block by dense vector
     for (int j = 0; j < 8; j++) {
       VALUE sumRow = 0;
       for (int k = 0; k < 8; k++) {
         sumRow += block[j][k] * x[col * 8 + k];
       }
-
       result[idx * 8 + j] = sumRow;
     }
   }
@@ -93,26 +91,43 @@ __global__ void bsr_vector_kernel_3(
 
   const int i = threadIdx.x;
   const int j = threadIdx.y;
-
   const int rowIdx = blockIdx.x;
-  const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
-  const int rowEnd = A.blRowPtr[rowIdx + 1];
+
+  __shared__ shared_row_ptr[64];
+  shared_row_ptr[threadIdx.x] = A.blRowPtr[rowIdx];
+
+  __syncthreads();
+
+  const int rowStart = shared_row_ptr[threadIdx.x] + blockIdx.y;
+  const int rowEnd = shared_row_ptr[threadIdx.x + 1];
 
   if (rowStart >= rowEnd) {
     block[j][i] = 0;
     return;
   }
 
-  const int col = A.blColIdx[rowStart];
+  __shared__ shared_col_idx[64];
+  __shared__ shared_val[64];
+  __shared__ shared_bmp[64];
+  __shared__ shared_start[64];
 
-  unsigned long long bitMap = A.blBmp[rowStart];
-  const int start = A.blStart[rowStart];
-  const int end = A.blStart[rowStart + 1];
+  shared_col_idx[threadIdx.x] = A.blColIdx[rowStart];
+  shared_bmp[threadIdx.x] = A.blBmp[rowStart];
+  shared_start[threadIdx.x] = A.blStart[rowStart];
+  shared_val[threadIdx.x] = A.val[shared_start[threadIdx.x]];
+
+  __syncthreads();
+
+  const int col = shared_col_idx[threadIdx.x];
+
+  unsigned long long bitMap = shared_bmp[threadIdx.x];
+  const int start = shared_start[threadIdx.x];
+  const int end = shared_start[threadIdx.x + 1];
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-    block[j][i] = A.val[start + numberOfVals];
+    block[j][i] = shared_val[threadIdx.x + numberOfVals];
   } else {
     block[j][i] = 0;
   }
