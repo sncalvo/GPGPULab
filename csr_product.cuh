@@ -167,6 +167,18 @@ __global__ void bsr_vector_kernel_3(
 
   // printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
 
+  // Print block
+  if (threadIdx.x == 0 && threadIdx.y == 0) {
+    printf("\n");
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        printf("%.1f ", block[i][j]);
+      }
+      printf("\n");
+    }
+    printf("\n");
+  }
+
   if (j == 0) {
     for (int k = 0; k < 8; k++) {
       VALUE sumRow = 0;
