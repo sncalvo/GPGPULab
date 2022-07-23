@@ -126,7 +126,7 @@ __global__ void bsr_vector_kernel_3(
     printf("Writing: %.2f, idx %d\n", A.val[start + numberOfVals], start + numberOfVals);
     block[j][i] = A.val[start + numberOfVals];
   } else {
-    block[j][i] = 0;
+    // block[j][i] = 0;
   }
 
   __syncthreads();
