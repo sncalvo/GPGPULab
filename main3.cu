@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
 
   printf("\n");
 
-  for (int i = 0; i < 1 * 8; ++i)
+  for (int i = 0; i < 2 * 8; ++i)
   {
     printf("%.2f\n", res[i]);
   }
