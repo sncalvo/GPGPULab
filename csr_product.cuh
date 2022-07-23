@@ -145,19 +145,19 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[idx] + threadIdx.y / 8;
   const int rowEnd = A.blRowPtr[idx + 1];
 
-  if (rowStart < rowEnd) {
-    const int col = A.blColIdx[rowStart];
+  if (rowStart >= rowEnd) {
+    return;
+  }
 
-    unsigned long long bitMap = A.blBmp[rowStart];
-    const int start = A.blStart[rowStart];
+  const int col = A.blColIdx[rowStart];
 
-    const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
+  unsigned long long bitMap = A.blBmp[rowStart];
+  const int start = A.blStart[rowStart];
 
-    if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-      block[j][i] = A.val[start + numberOfVals];
-    } else {
-      block[j][i] = 0;
-    }
+  const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
+
+  if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
+    block[j][i] = A.val[start + numberOfVals];
   } else {
     block[j][i] = 0;
   }
