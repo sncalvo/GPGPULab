@@ -142,6 +142,10 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
+  if (rowStart >= rowEnd) {
+    return;
+  }
+
   const int col = A.blColIdx[rowStart];
 
   unsigned long long bitMap = A.blBmp[rowStart];
