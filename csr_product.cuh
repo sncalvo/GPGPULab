@@ -114,7 +114,7 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  printf("Evaluating thread: %d \n", j);
+  printf("%d %d %d %d %d %d %d %d\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
 
   if (j == 0) {
     for (int k = 0; k < 8; k++) {
