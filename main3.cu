@@ -25,6 +25,8 @@ int main(int argc, char *argv[]){
 
   printf("\n \n \n");
 
+  print_matriz_bloques_en_COO(&A);
+
   VALUE *vector = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
 
   random_vector(vector, A.blColN);
@@ -75,7 +77,7 @@ int main(int argc, char *argv[]){
 
   printf("\n");
 
-  for (int i = 0; i < 10 * 8; ++i)
+  for (int i = 0; i < 1 * 8; ++i)
   {
     printf("%.2f\n", res[i]);
   }
