@@ -168,7 +168,7 @@ __global__ void bsr_vector_kernel_3(
   // printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
 
   // Print block
-  if (threadIdx.x == 0 && threadIdx.y == 0) {
+  if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
     printf("\n");
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
