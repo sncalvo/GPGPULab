@@ -23,16 +23,20 @@ int main(int argc, char *argv[]){
 
   gen_matriz_bloques(&A, blFilN, blColN);
 
+  CSRMat A_csr;
+
+  bloques_a_CSR(&A, &A_csr);
+
   printf("\n \n \n");
 
   // print_matriz_bloques_en_COO(&A);
 
-  VALUE *vector = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
+  VALUE *vector = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
 
   random_vector(vector, A.blColN * 8);
 
   VALUE *d_res;
-  CUDA_CHK(cudaMalloc((void **)&d_res, A.blColN*8*sizeof(VALUE)));
+  CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
 
   int *d_blStart;
   CUDA_CHK(cudaMalloc((void **)&d_blStart, (A.nBlocks+1)*sizeof(int)));
@@ -61,8 +65,8 @@ int main(int argc, char *argv[]){
   A.val = d_val;
 
   VALUE *d_vector;
-  CUDA_CHK(cudaMalloc((void **)&d_vector, A.blColN*8*sizeof(VALUE)));
-  CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*8*sizeof(VALUE), cudaMemcpyHostToDevice));
+  CUDA_CHK(cudaMalloc((void **)&d_vector, A_csr.colN*sizeof(VALUE)));
+  CUDA_CHK(cudaMemcpy(d_vector, vector, A_csr.colN*sizeof(VALUE), cudaMemcpyHostToDevice));
 
 	dim3 dimBlock(8, 8);
 	dim3 dimGrid(A.blFilN, A.blColN);
@@ -70,8 +74,8 @@ int main(int argc, char *argv[]){
 
   CUDA_CHK(cudaGetLastError());
   CUDA_CHK(cudaDeviceSynchronize());
-  VALUE *res = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
-  CUDA_CHK(cudaMemcpy(res, d_res, A.blColN*8*sizeof(VALUE), cudaMemcpyDeviceToHost));
+  VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
+  CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
   printf("\n");
 
