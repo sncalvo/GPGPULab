@@ -159,8 +159,8 @@ __global__ void bsr_vector_kernel_3(
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
     block[j][i] = A.val[start + numberOfVals];
 
-    // printf("ThreadX: %d, ThreadY: %d, Idx: %d, RowStart: %d, RowEnd: %d\n", threadIdx.x, threadIdx.y, idx, rowStart, rowEnd);
-    // atomicAdd(&result[idx * 8 + j], A.val[start + numberOfVals] * x[col * 8 + i]);
+    printf("ThreadX: %d, ThreadY: %d, Idx: %d, RowStart: %d, RowEnd: %d\n", threadIdx.x, threadIdx.y, idx, rowStart, rowEnd);
+    atomicAdd(&result[idx * 8 + j], A.val[start + numberOfVals] * x[col * 8 + i]);
   } else {
     block[j][i] = 0;
   }
@@ -176,7 +176,7 @@ __global__ void bsr_vector_kernel_3(
   //   printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], idx * 8 + j);
   // }
 
-  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
+  // atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
   // if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
   //   for (int j = 0; j < 8; j++) {
   //   }
