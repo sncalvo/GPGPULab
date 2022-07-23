@@ -170,9 +170,9 @@ __global__ void bsr_vector_kernel_3(
   // Print block
   if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
     printf("\n");
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
-        printf("%.1f ", block[i][j]);
+    for (int k = 0; k < 8; k++) {
+      for (int l = 0; l < 8; l++) {
+        printf("%.1f ", block[k][l]);
       }
       printf("\n");
     }
@@ -183,7 +183,7 @@ __global__ void bsr_vector_kernel_3(
     for (int k = 0; k < 8; k++) {
       VALUE sumRow = 0;
       for (int l = 0; l < 8; l++) {
-        sumRow += block[k][l] * x[col * 8 + l];
+        sumRow += block[k][l] * x[col * 8 + k];
       }
 
       if (sumRow != 0) {
