@@ -118,34 +118,12 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  // printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
-
-  // Print block
-  // if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
-  if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && threadIdx.x == 0) {
-    printf("HOLAAAA \n");
-    printf("\n");
-    for (int k = 0; k < 8; k++) {
-      for (int l = 0; l < 8; l++) {
-        printf("%.1f ", block[k][l]);
-      }
-      printf("   %.1f \n", x[col * 8 + k]);
-    }
-    printf("\n");
-  }
-
   if (j == 0 && i == 0) {
+    printf("HOLA\n");
     for (int k = 0; k < 8; k++) {
       VALUE sumRow = 0;
       for (int l = 0; l < 8; l++) {
         sumRow += block[k][l] * x[col * 8 + l];
-        if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && threadIdx.x == 0) {
-          printf("%.1f + ", block[k][l] * x[col * 8 + l]);
-        }
-      }
-
-      if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && threadIdx.x == 0) {
-        printf(": %.1f \n", sumRow);
       }
 
       if (sumRow != 0) {
