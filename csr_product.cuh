@@ -137,12 +137,6 @@ __global__ void bsr_vector_kernel_3(
 ) {
   __shared__ VALUE block[8][8];
 
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 8; j++) {
-      block[i][j] = 0;
-    }
-  }
-
   const int i = threadIdx.x;
   const int j = threadIdx.y;
 
@@ -166,9 +160,7 @@ __global__ void bsr_vector_kernel_3(
     block[j][i] = A.val[start + numberOfVals];
 
 
-    if (A.val[start + numberOfVals] > 2) {
-      printf("%d %d %d %d %llu \n", j, i, block[j][i], numberOfVals, bitMap & (0x8000000000000000 >> (j*8 + i)));
-    }
+    printf("%d %d %d %d %llu \n", j, i, block[j][i], numberOfVals, bitMap & (0x8000000000000000 >> (j*8 + i)));
   } else {
     block[j][i] = 0;
   }
