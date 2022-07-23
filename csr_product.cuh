@@ -88,6 +88,12 @@ __global__ void bsr_vector_kernel_3(
 ) {
   __shared__ VALUE block[8][8];
 
+  if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0) {
+    for (int i = 0; i < A.blColN; i++) {
+      printf("%f ", x[i]);
+    }
+  }
+
   const int i = threadIdx.x;
   const int j = threadIdx.y;
 
@@ -107,7 +113,7 @@ __global__ void bsr_vector_kernel_3(
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
-  printf("%llu\n", bitMap);
+  // printf("%llu\n", bitMap);
 
   if (bitMap & (0x8000000000000000 >> (j*8 + i)) != 0) {
     printf("Writing: %.2f, with: start: %d, nValues: %d \n", A.val[start + numberOfVals], start, numberOfVals);
@@ -118,7 +124,7 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
+  // printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
 
   if (j == 0) {
     for (int k = 0; k < 8; k++) {
