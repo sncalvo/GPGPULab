@@ -102,7 +102,7 @@ __global__ void bsr_vector_kernel_3(
 
     // Print blStart
     printf("\n");
-    for (int i = 0; i < A.blFilN + 1; i++) {
+    for (int i = 0; i < A.nBlocks + 1; i++) {
       printf("%d ", A.blStart[i]);
     }
   }
