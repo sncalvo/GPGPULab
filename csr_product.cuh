@@ -105,6 +105,7 @@ __global__ void bsr_vector_kernel_3(
     for (int i = 0; i < A.nBlocks + 1; i++) {
       printf("%d ", A.blStart[i]);
     }
+    printf("\n");
   }
   __syncthreads();
 
