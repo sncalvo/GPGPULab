@@ -184,7 +184,7 @@ __global__ void bsr_vector_kernel_3(
   // }
 
   if (block[j][i] * x[col * 8 + i] != 0) {
-    printf("Adding %.2f\n to %d %d", block[j][i] * x[col * 8 + i], i, j);
+    printf("Adding %.2f to %d %d \n", block[j][i] * x[col * 8 + i], i, j);
   }
 
   atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
