@@ -137,17 +137,18 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
-  // if (rowStart >= rowEnd) {
-  //   block[j][i] = 0;
-  //   return;
-  // }
-
   const int col = A.blColIdx[rowStart];
 
   unsigned long long bitMap = A.blBmp[rowStart];
   const int start = A.blStart[rowStart];
+  const int end = A.blStart[rowStart + 1];
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
+
+  if (start + numberOfVals > end) {
+    block[j][i] = 0;
+    return;
+  }
 
   // printf("%llu\n", bitMap);
   // printf("%llu --- %s,\n", bitMap & (0x8000000000000000 >> (j*8 + i)), bitMap & (0x8000000000000000 >> (j*8 + i)) ? "true" : "false");
