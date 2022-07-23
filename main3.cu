@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMemcpy(d_vector, vector, A.blColN*8*sizeof(VALUE), cudaMemcpyHostToDevice));
 
 	dim3 dimBlock(8, 8);
-	dim3 dimGrid(A.blFilN, A.blColN);
+	dim3 dimGrid(A.blFilN, A.blColN -1);
   bsr_vector_kernel_3<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
 
   CUDA_CHK(cudaGetLastError());
