@@ -140,9 +140,8 @@ __global__ void bsr_vector_kernel_3(
   const int i = threadIdx.x;
   const int j = threadIdx.y;
 
-  const int idx = blockIdx.x;
-
-  const int rowStart = A.blRowPtr[idx] + blockIdx.y;
+  const int rowIdx = blockIdx.x;
+  const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
   const int rowEnd = A.blRowPtr[idx + 1];
 
   if (rowStart >= rowEnd) {
@@ -159,22 +158,15 @@ __global__ void bsr_vector_kernel_3(
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
     block[j][i] = A.val[start + numberOfVals];
 
-    printf("ThreadX: %d, ThreadY: %d, Blocky: %d, Idx: %d, RowStart: %d, RowEnd: %d\n", threadIdx.x, threadIdx.y, blockIdx.y, idx, rowStart, rowEnd);
-    atomicAdd(&result[idx * 8 + j], A.val[start + numberOfVals] * x[col * 8 + i]);
+    atomicAdd(&result[rowIdx * 8 + j], A.val[start + numberOfVals] * x[col * 8 + i]);
   } else {
     block[j][i] = 0;
   }
-  // if (block[j][i] > 2) {
-  //   printf("%d %d %d %d %llu \n", j, i, block[j][i], numberOfVals, bitMap & (0x8000000000000000 >> (j*8 + i)));
-  // }
 
   __syncthreads();
-  // printf("%d %d %.2f %d Bitmap:%llu Mask:%llu \n", j, i, block[j][i], numberOfVals, bitMap, bitMap & (0x8000000000000000 >> (j*8 + i)));
-  // 34
-
-  if (block[j][i] * x[col * 8 + i] != 0) {
-    printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], idx * 8 + j);
-  }
+  // if (block[j][i] * x[col * 8 + i] != 0) {
+  //   printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], rowIdx * 8 + j);
+  // }
 
   // atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
   // if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
