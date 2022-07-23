@@ -184,10 +184,14 @@ __global__ void bsr_vector_kernel_3(
       VALUE sumRow = 0;
       for (int l = 0; l < 8; l++) {
         sumRow += block[k][l] * x[col * 8 + l];
-        printf("%.1f +", block[k][l] * x[col * 8 + l]);
+        if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+          printf("%.1f +", block[k][l] * x[col * 8 + l]);
+        }
       }
 
-      printf("%.1f \n", sumRow);
+      if (threadIdx.x == 0 && blockIdx.x == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+        printf("%.1f \n", sumRow);
+      }
 
       if (sumRow != 0) {
         atomicAdd(&result[rowIdx * 8 + k], sumRow);
