@@ -142,17 +142,33 @@ __global__ void bsr_vector_kernel_3(
 
   const int idx = blockIdx.y;
 
-  const int rowStart = A.blRowPtr[idx] + threadIdx.y / 8;
-  const int rowEnd = A.blRowPtr[idx + 1];
+
+  __shared__ int rowPtr[1024];
+  rowPtr[threadIdx.y] = A.blRowPtr[idx];
+
+  __syncthreads();
+
+  const int rowStart = rowPtr[idx] + threadIdx.y / 8;
+  const int rowEnd = rowPtr[idx+1];
 
   if (rowStart >= rowEnd) {
     return;
   }
 
-  const int col = A.blColIdx[rowStart];
+  __shared__ int colIdx[1024];
+  __shared__ int start[1024];
+  __shared__ unsigned long long bmp[1024];
 
-  unsigned long long bitMap = A.blBmp[rowStart];
-  const int start = A.blStart[rowStart];
+  colIdx[threadIdx.y] = A.blColIdx[rowStart];
+  start[threadIdx.y] = A.blStart[rowStart];
+  bmp[threadIdx.y] = A.blBmp[rowStart];
+
+  __syncthreads();
+
+  const int col = colIdx[threadIdx.y];
+
+  unsigned long long bitMap = bmp[threadIdx.y];
+  const int start = start[threadIdx.y];
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
