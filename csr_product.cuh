@@ -96,7 +96,7 @@ __global__ void bsr_vector_kernel_3(
 
     // Print matrix
     for (int i = 0; i < A.nnz; i++) {
-      printf("%f ", A.val[i]);
+      printf("idx: %d, %f \n", i, A.val[i]);
     }
     printf("\n");
   }
@@ -123,7 +123,7 @@ __global__ void bsr_vector_kernel_3(
   // printf("%llu\n", bitMap);
 
   if (bitMap & (0x8000000000000000 >> (j*8 + i)) != 0) {
-    printf("Writing: %.2f, with: start: %d, nValues: %d \n", A.val[start + numberOfVals], start, numberOfVals);
+    printf("Writing: %.2f, indx: %d\n", A.val[start + numberOfVals], start + numberOfVals);
     block[j][i] = A.val[start + numberOfVals];
   } else {
     block[j][i] = 0;
