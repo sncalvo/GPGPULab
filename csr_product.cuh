@@ -156,7 +156,7 @@ __global__ void bsr_vector_kernel_3(
   }
 
   __shared__ int colIdx[1024];
-  __shared__ int start[1024];
+  __shared__ int startIdx[1024];
   __shared__ unsigned long long bmp[1024];
 
   colIdx[threadIdx.y] = A.blColIdx[rowStart];
@@ -168,7 +168,7 @@ __global__ void bsr_vector_kernel_3(
   const int col = colIdx[threadIdx.y];
 
   unsigned long long bitMap = bmp[threadIdx.y];
-  const int start = start[threadIdx.y];
+  const int start = startIdx[threadIdx.y];
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
