@@ -18,7 +18,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution5
 
-nvcc ./main3.cu -o solution5
+nvcc ./main3.cu -lineinfo -o solution5
 
 # cuda-memcheck ./solution2 10000 10000
 

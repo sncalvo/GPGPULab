@@ -114,6 +114,8 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
+  prtinf("Evaluating thread: %d \n", j)
+
   if (j == 0) {
     for (int k = 0; k < 8; k++) {
       VALUE sumRow = 0;
