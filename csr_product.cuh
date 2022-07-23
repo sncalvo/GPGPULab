@@ -107,6 +107,7 @@ __global__ void bsr_vector_kernel_3(
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
   if (bitMap & (0x8000000000000000 >> (j*8 + i)) != 0) {
+    printf("Writing: %d\n", A.val[start + numberOfVals]);
     block[j][i] = A.val[start + numberOfVals];
   } else {
     block[j][i] = 0;
@@ -114,7 +115,7 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
+  // printf("%d %d %d %d %d %d %d %.2f\n", i, j, rowIdx, rowStart, rowEnd, col, numberOfVals, block[j][i]);
 
   if (j == 0) {
     for (int k = 0; k < 8; k++) {
@@ -123,7 +124,6 @@ __global__ void bsr_vector_kernel_3(
         sumRow += block[k][l] * x[col * 8 + l];
       }
 
-      printf("%d %d %d %f\n", rowIdx, col, k, sumRow);
       if (sumRow != 0) {
         atomicAdd(&result[rowIdx * 8 + k], sumRow);
       }
