@@ -175,7 +175,7 @@ __global__ void bsr_vector_kernel_3(
   //   printf("Adding %.2f to %d \n", block[j][i] * x[col * 8 + i], idx * 8 + j);
   // }
 
-  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
+  // atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
   // if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
   //   for (int j = 0; j < 8; j++) {
   //   }
