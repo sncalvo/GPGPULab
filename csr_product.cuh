@@ -114,7 +114,7 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  prtinf("Evaluating thread: %d \n", j);
+  printf("Evaluating thread: %d \n", j);
 
   if (j == 0) {
     for (int k = 0; k < 8; k++) {
@@ -123,8 +123,8 @@ __global__ void bsr_vector_kernel_3(
         sumRow += block[k][l] * x[col * 8 + l];
       }
 
+      printf("%d %d %d %f\n", rowIdx, col, k, sumRow);
       if (sumRow != 0) {
-        printf("%d %d %d %f\n", rowIdx, col, k, sumRow);
         atomicAdd(&result[rowIdx * 8 + k], sumRow);
       }
     }
