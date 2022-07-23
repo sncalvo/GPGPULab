@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
   printf("\n \n \n");
 
-  print_matriz_bloques_en_COO(&A);
+  // print_matriz_bloques_en_COO(&A);
 
   VALUE *vector = (VALUE*) malloc(A.blColN*8*sizeof(VALUE));
 
