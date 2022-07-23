@@ -106,6 +106,27 @@ __global__ void bsr_vector_kernel_3(
       printf("%d ", A.blStart[i]);
     }
     printf("\n");
+
+    // Print blColIdx
+    printf("\n");
+    for (int i = 0; i < A.nnz; i++) {
+      printf("%d ", A.blColIdx[i]);
+    }
+    printf("\n");
+
+    // Print blBmp
+    printf("\n");
+    for (int i = 0; i < A.nBlocks; i++) {
+      printf("%llu ", A.blBmp[i]);
+    }
+    printf("\n");
+
+    // Print blRowPtr
+    printf("\n");
+    for (int i = 0; i < A.nBlocks + 1; i++) {
+      printf("%d ", A.blRowPtr[i]);
+    }
+    printf("\n");
   }
   __syncthreads();
 
