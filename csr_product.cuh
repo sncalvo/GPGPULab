@@ -93,6 +93,12 @@ __global__ void bsr_vector_kernel_3(
       printf("%f ", x[i]);
     }
     printf("\n");
+
+    // Print matrix
+    for (int i = 0; i < A.nnz; i++) {
+      printf("%f ", A.val[i]);
+    }
+    printf("\n");
   }
 
   const int i = threadIdx.x;
