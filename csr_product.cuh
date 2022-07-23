@@ -99,7 +99,14 @@ __global__ void bsr_vector_kernel_3(
     for (int i = 0; i < A.nnz; i++) {
       printf("idx: %d, %f \n", i, A.val[i]);
     }
+
+    // Print blStart
+    printf("\n");
+    for (int i = 0; i < A.blFilN + 1; i++) {
+      printf("%d ", A.blStart[i]);
+    }
   }
+  __syncthreads();
 
   const int i = threadIdx.x;
   const int j = threadIdx.y;
