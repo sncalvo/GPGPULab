@@ -145,19 +145,19 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[idx] + threadIdx.y / 8;
   const int rowEnd = A.blRowPtr[idx + 1];
 
-  // if (rowStart >= rowEnd) {
-  //   return;
-  // }
+  if (rowStart < rowEnd) {
+    const int col = A.blColIdx[rowStart];
 
-  const int col = A.blColIdx[rowStart];
+    unsigned long long bitMap = A.blBmp[rowStart];
+    const int start = A.blStart[rowStart];
 
-  unsigned long long bitMap = A.blBmp[rowStart];
-  const int start = A.blStart[rowStart];
+    const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
-  const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
-
-  if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-    block[j][i] = A.val[start + numberOfVals];
+    if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
+      block[j][i] = A.val[start + numberOfVals];
+    } else {
+      block[j][i] = 0;
+    }
   } else {
     block[j][i] = 0;
   }
@@ -183,5 +183,5 @@ __global__ void bsr_vector_kernel_3(
   //     block[7][0], block[7][1], block[7][2], block[7][3], block[7][4], block[7][5], block[7][6], block[7][7]);
   // }
 
-  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col + i]);
+  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
 }
