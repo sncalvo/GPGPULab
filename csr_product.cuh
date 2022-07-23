@@ -122,7 +122,7 @@ __global__ void bsr_vector_kernel_3(
 
   // printf("%llu\n", bitMap);
   printf("%llu --- %s,\n", bitMap & (0x8000000000000000 >> (j*8 + i)), bitMap & (0x8000000000000000 >> (j*8 + i)) ? "true" : "false");
-  if (bitMap & (0x8000000000000000 >> (j*8 + i)) != 0) {
+  if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
     printf("Writing: %.2f, with: start: %d, nValues: %d \n", A.val[start + numberOfVals], start, numberOfVals);
     block[j][i] = A.val[start + numberOfVals];
   } else {
