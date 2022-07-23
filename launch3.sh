@@ -20,7 +20,7 @@ rm ./solution3
 
 nvcc ./cusparse.cu -lcusparse -o solution3
 
-./solution3 10 10
+./solution3 10000 10000
 
 # echo '============================'
 # echo 'NORMAL RUN STARTING'
