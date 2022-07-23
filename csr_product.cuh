@@ -106,10 +106,8 @@ __global__ void bsr_vector_kernel_3(
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
-  if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
+  if (bitMap & (0x8000000000000000 >> (j*8 + i)) != 0) {
     block[j][i] = A.val[start + numberOfVals];
-
-    // atomicAdd(&result[rowIdx * 8 + j], A.val[start + numberOfVals] * x[col * 8 + i]);
   } else {
     block[j][i] = 0;
   }
