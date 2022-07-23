@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaGetLastError());
   CUDA_CHK(cudaDeviceSynchronize());
   VALUE *res = (VALUE*) malloc(A.blColN*sizeof(VALUE));
-  CUDA_CHK(cudaMemcpy(res, d_res, A.blColN*sizeof(VALUE), cudaMemcpyDeviceToHost));
+  CUDA_CHK(cudaMemcpy(res, d_res, A.blColN*8*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
   printf("\n");
 
