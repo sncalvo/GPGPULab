@@ -171,8 +171,8 @@ __global__ void bsr_vector_kernel_3(
   if (blockIdx.x == 3 && threadIdx.x == 4 && threadIdx.y == 2) {
     for (int j = 0; j < 8; j++) {
     }
-    printf("%d %d, %llu \n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n",
-      threadIdx.x, threadIdx.y, bitMap,
+    printf("%d %d %d, %llu \n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f\n",
+      threadIdx.x, threadIdx.y, A.val[start + numberOfVals], bitMap,
       block[0][0], block[0][1], block[0][2], block[0][3], block[0][4], block[0][5], block[0][6], block[0][7],
       block[1][0], block[1][1], block[1][2], block[1][3], block[1][4], block[1][5], block[1][6], block[1][7],
       block[2][0], block[2][1], block[2][2], block[2][3], block[2][4], block[2][5], block[2][6], block[2][7],
