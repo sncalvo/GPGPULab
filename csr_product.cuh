@@ -145,9 +145,9 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[idx] + threadIdx.y / 8;
   const int rowEnd = A.blRowPtr[idx + 1];
 
-  // if (rowStart >= rowEnd) {
-  //   return;
-  // }
+  if (rowStart >= rowEnd) {
+    return;
+  }
 
   const int col = A.blColIdx[rowStart];
 
@@ -164,7 +164,7 @@ __global__ void bsr_vector_kernel_3(
 
   __syncthreads();
 
-  if (blockIdx.x == 0 && blockIdx.y == 40 && threadIdx.x == 0 && threadIdx.y == 0) {
+  if (blockIdx.x == 0 && threadIdx.x == 0 && threadIdx.y == 0) {
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
         printf("%f ", block[j][k]);
