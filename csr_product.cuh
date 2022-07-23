@@ -94,11 +94,12 @@ __global__ void bsr_vector_kernel_3(
     // }
     // printf("\n");
 
+    printf("\n");
     // Print matrix
-    // for (int i = 0; i < A.nnz; i++) {
-    //   printf("idx: %d, %f \n", i, A.val[i]);
-    // }
-    // printf("\n");
+    for (int i = 0; i < A.nnz; i++) {
+      printf("idx: %d, %f \n", i, A.val[i]);
+    }
+    printf("\n");
   }
 
   const int i = threadIdx.x;
@@ -121,9 +122,10 @@ __global__ void bsr_vector_kernel_3(
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
   // printf("%llu\n", bitMap);
-  printf("%llu --- %s,\n", bitMap & (0x8000000000000000 >> (j*8 + i)), bitMap & (0x8000000000000000 >> (j*8 + i)) ? "true" : "false");
+  // printf("%llu --- %s,\n", bitMap & (0x8000000000000000 >> (j*8 + i)), bitMap & (0x8000000000000000 >> (j*8 + i)) ? "true" : "false");
+  printf("\n");
   if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-    printf("Writing: %.2f, with: start: %d, nValues: %d \n", A.val[start + numberOfVals], start, numberOfVals);
+    printf("Writing: %.2f, idx %d\n", A.val[start + numberOfVals], start + numberOfVals);
     block[j][i] = A.val[start + numberOfVals];
   } else {
     block[j][i] = 0;
