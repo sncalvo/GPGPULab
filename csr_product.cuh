@@ -139,12 +139,12 @@ __global__ void bsr_vector_kernel_3(
       VALUE sumRow = 0;
       for (int l = 0; l < 8; l++) {
         sumRow += block[k][l] * x[col * 8 + l];
-        if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+        if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && threadIdx.x == 0) {
           printf("%.1f + ", block[k][l] * x[col * 8 + l]);
         }
       }
 
-      if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && blockIdx.y == 0) {
+      if (blockIdx.x == 1 && blockIdx.y == 0 && threadIdx.y == 0 && threadIdx.x == 0) {
         printf(": %.1f \n", sumRow);
       }
 
