@@ -160,7 +160,7 @@ __global__ void bsr_vector_kernel_3(
     block[j][i] = A.val[start + numberOfVals];
 
 
-    printf("%d %d %d %d %llu %llu \n", j, i, block[j][i], numberOfVals, bitMap, bitMap & (0x8000000000000000 >> (j*8 + i)));
+    printf("%d %d %d %d Bitmap:%llu Mask:%llu \n", j, i, block[j][i], numberOfVals, bitMap, bitMap & (0x8000000000000000 >> (j*8 + i)));
   } else {
     block[j][i] = 0;
   }
