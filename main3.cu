@@ -231,7 +231,7 @@ int main(int argc, char *argv[]){
 	dim3 dimGrid(A.blFilN, A.blColN);
 
   // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
-  bsr_vector_kernel_2<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
+  bsr_vector_kernel_3<<<dimGrid, dimBlock>>>(A, d_vector, d_res);
 
   CUDA_CHK(cudaGetLastError());
   CUDA_CHK(cudaDeviceSynchronize());

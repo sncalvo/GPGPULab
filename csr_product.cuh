@@ -128,3 +128,43 @@ __global__ void bsr_vector_kernel_2(
   }
   // }
 }
+
+// Kernel that implements spmv product using Block CSR matrix
+__global__ void bsr_vector_kernel_3(
+  BlMat A,
+  const VALUE *x,
+  VALUE *result
+) {
+  __shared__ VALUE block[8][8];
+
+  const int i = threadIdx.x;
+  const int j = threadIdx.y;
+
+  const int idx = blockIdx.y;
+
+  const int rowStart = A.blRowPtr[idx] + threadIdx.y / 8;
+  const int rowEnd = A.blRowPtr[idx + 1];
+
+  if (rowStart >= rowEnd) {
+    return;
+  }
+
+  const int col = A.blColIdx[rowStart];
+
+  unsigned long long bitMap = A.blBmp[rowStart];
+  const int start = A.blStart[rowStart];
+
+  const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
+
+  if (numberOfVals == 0) {
+    return;
+  }
+
+  if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
+    block[j][k] = A.val[start + numberOfVals];
+  } else {
+    block[j][k] = 0;
+  }
+
+  atomicAdd(&result[idx * 8 + j], block[j][i] * x[col * 8 + i]);
+}
