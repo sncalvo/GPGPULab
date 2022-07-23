@@ -71,6 +71,17 @@ __global__ void bsr_vector_kernel(
       }
     }
 
+    // Print block for first thread
+    if (idx == 0) {
+      for (int j = 0; j < 8; j++) {
+        for (int k = 0; k < 8; k++) {
+          printf("%f ", block[j][k]);
+        }
+        printf("\n");
+      }
+      printf("\n");
+    }
+
     // Multiply dense block by dense vector
     for (int j = 0; j < 8; j++) {
       for (int k = 0; k < 8; k++) {
