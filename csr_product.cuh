@@ -43,13 +43,15 @@ __global__ void spmv_csr_kernel_2(
   const int row = blockIdx.y * gridDim.y + blockIdx.z;
   const int col = blockIdx.x * blockDim.x + threadIdx.x;
 
-  __shared__ int near_row[1024];
+  __shared__ int start;
+  __shared__ int end;
 
-  near_row[blockIdx.y] = A.rowPtr[row];
+  if (threadIdx.x == 0) {
+    start = A.rowPtr[row];
+    end = A.rowPtr[row + 1];
+  }
+
   __syncthreads();
-
-  int start = near_row[threadIdx.x];
-  int end = near_row[threadIdx.x + 1];
 
   VALUE sum = 0;
   if (start + col < end) {
@@ -179,6 +181,7 @@ __global__ void bsr_vector_kernel_3(
   __shared__ unsigned long long bitMap;
   __shared__ int start;
   __shared__ VALUE vals[64];
+  __shared__ VALUE shared_x[64];
 
   col = A.blColIdx[rowStart];
   bitMap = A.blBmp[rowStart];
@@ -188,11 +191,12 @@ __global__ void bsr_vector_kernel_3(
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
   vals[threadIdx.x] = A.val[start + numberOfVals];
+  shared_x[threadIdx.x] = x[col * 8 + i];
 
   __syncthreads();
 
   if (bitMap & (0x8000000000000000 >> (j*8 + i)) && rowStart < rowEnd) {
-    sumRow = vals[threadIdx.x];
+    sumRow = vals[threadIdx.x] * shared_x[threadIdx.x];
   } else {
     sumRow = 0;
   }

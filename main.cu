@@ -58,34 +58,35 @@ int main(int argc, char *argv[]){
   VALUE *d_res;
   CUDA_CHK(cudaMalloc((void **)&d_res, blColN*8*sizeof(VALUE)));
 
-	dim3 dimBlock(256);
+	// dim3 dimBlock(256);
   // Fast ceil(A_csr.colN/256)
-	dim3 dimGrid((A_csr.colN + 256 - 1) / 256);
+	// dim3 dimGrid((A_csr.colN + 256 - 1) / 256);
 
   // for (int i = 0; i < A_csr.colN; ++i)
   // {
   //   printf("%.2f\n", vector[i]);
   // }
 
-  // dim3 dimBlock(256, 1);
-  // const int gridRowSquare = sqrt(A_csr.filN);
-  // dim3 dimGrid((A_csr.colN + 256 - 1) / 256, gridRowSquare, gridRowSquare);
+  dim3 dimBlock(256, 1);
+  const int gridRowSquare = sqrt(A_csr.filN);
+  dim3 dimGrid((A_csr.colN + 256 - 1) / 256, gridRowSquare, gridRowSquare);
   // printf("%d\n", dimBlock.x);
   // printf("x: %d, y: %d\n", dimGrid.x, dimGrid.y);
 
-  spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
+  // spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
+  spmv_csr_kernel_2<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
 
   CUDA_CHK(cudaGetLastError());
   CUDA_CHK(cudaDeviceSynchronize());
   VALUE *res = (VALUE*) malloc(blColN*8*sizeof(VALUE));
   CUDA_CHK(cudaMemcpy(res, d_res, blColN*8*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
-  // printf("\n");
+  printf("\n");
 
-  // for (int i = 0; i < 10 * 8; ++i)
-  // {
-  //   printf("%.2f\n", res[i]);
-  // }
+  for (int i = 0; i < 10 * 8; ++i)
+  {
+    printf("%.2f\n", res[i]);
+  }
 
   cudaFree(d_vector);
   cudaFree(d_val);
