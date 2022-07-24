@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include "./types.h"
 
+__inline__ __device__ VALUE warp_reduce_sum(VALUE val) {
+  for (int mask = warpSize/2; mask > 0; mask /= 2)
+    val += __shfl_xor(val, mask);
+  return val;
+}
+
 // Kernel that implements spmv product using CSR matrix
 __global__ void spmv_csr_kernel(
   const CSRMat A, // CSR Matrix A
@@ -27,6 +33,36 @@ __global__ void spmv_csr_kernel(
   }
 
   result[row] = sum;
+}
+
+__global__ void spmv_csr_kernel_2(
+  const CSRMat A, // CSR Matrix A
+  const VALUE *x, // Vector x
+  VALUE *result // Result vector
+) {
+  const int row = blockIdx.y;
+  const int col = blockIdx.x * blockDim.x + threadIdx.x;
+
+  __shared__ int near_row[1024];
+
+  near_row[blockIdx.y] = A.rowPtr[row];
+  __syncthreads();
+
+  int start = near_row[threadIdx.x];
+  int end = near_row[threadIdx.x + 1];
+
+  VALUE sum = 0;
+  if (start + col < end) {
+    sum = A.val[start + col] * x[A.colIdx[start + i]];
+  } else {
+    sum = 0;
+  }
+
+  warp_reduce_sum(sum);
+
+  if (sum != 0) {
+    atomicAdd(&result[row], sum);
+  }
 }
 
 // Kernel that implements spmv product using Block CSR matrix
@@ -122,12 +158,6 @@ __global__ void bsr_vector_kernel_2(
       }
     }
   }
-}
-
-__inline__ __device__ VALUE warp_reduce_sum(VALUE val) {
-  for (int mask = warpSize/2; mask > 0; mask /= 2)
-    val += __shfl_xor(val, mask);
-  return val;
 }
 
 // Kernel that implements spmv product using Block CSR matrix
