@@ -31,13 +31,13 @@ int main(int argc, char *argv[]){
   bloques_a_CSR(&A, &A_csr);
   // print_CSR(&A_csr);
 
-  VALUE *vector = (VALUE*) malloc(A_csr.colN*8*sizeof(VALUE));
+  VALUE *vector = (VALUE*) malloc(blColN*8*sizeof(VALUE));
 
-  random_vector(vector, A_csr.colN);
+  random_vector(vector, blColN*8);
 
-  VALUE *d_vector = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
-  cudaMalloc((void **)&d_vector, A_csr.colN*sizeof(VALUE));
-	cudaMemcpy(d_vector, vector, A_csr.colN*sizeof(VALUE), cudaMemcpyHostToDevice);
+  VALUE *d_vector = (VALUE*) malloc(blColN*8*sizeof(VALUE));
+  cudaMalloc((void **)&d_vector, blColN*8*sizeof(VALUE));
+	cudaMemcpy(d_vector, vector, blColN*8*sizeof(VALUE), cudaMemcpyHostToDevice);
 
   VALUE *d_val = (VALUE*) malloc(A_csr.rowPtr[A_csr.filN]*sizeof(VALUE));
   int *d_colIdx = (int*) malloc(A_csr.rowPtr[A_csr.filN]*sizeof(int));
@@ -56,10 +56,10 @@ int main(int argc, char *argv[]){
   A_csr.rowPtr = d_rowPtr;
 
   VALUE *d_res;
-  CUDA_CHK(cudaMalloc((void **)&d_res, A_csr.colN*sizeof(VALUE)));
+  CUDA_CHK(cudaMalloc((void **)&d_res, blColN*8*sizeof(VALUE)));
 
 	dim3 dimBlock(256);
-  Fast ceil(A_csr.colN/256)
+  // Fast ceil(A_csr.colN/256)
 	dim3 dimGrid((A_csr.colN + 256 - 1) / 256);
 
   // for (int i = 0; i < A_csr.colN; ++i)
@@ -77,8 +77,8 @@ int main(int argc, char *argv[]){
 
   CUDA_CHK(cudaGetLastError());
   CUDA_CHK(cudaDeviceSynchronize());
-  VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
-  CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
+  VALUE *res = (VALUE*) malloc(blColN*8*sizeof(VALUE));
+  CUDA_CHK(cudaMemcpy(res, d_res, blColN*8*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
   printf("\n");
 
