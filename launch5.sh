@@ -1,11 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=mitrabajo
 #SBATCH --ntasks=1
-#SBATCH --mem=8192
-#SBATCH --time=00:10:00
-
+#SBATCH --mem=65536
+#SBATCH --time=00:30:00
 #SBATCH --partition=besteffort
-
 #SBATCH --qos=besteffort_gpu
 
 #SBATCH --gres=gpu:1
