@@ -67,10 +67,10 @@ int main(int argc, char *argv[]){
   //   printf("%.2f\n", vector[i]);
   // }
 
-  // printf("%d\n", dimBlock.x);
-  // printf("%d\n", dimGrid.x);
-  dim3 dimBlock(256);
+  dim3 dimBlock(256, 1);
   dim3 dimGrid((A_csr.colN + 256 - 1) / 256, A_csr.filN);
+  printf("%d\n", dimBlock.x);
+  printf("x: %d, y: %d\n", dimGrid.x, dimGrid.y);
 
   spmv_csr_kernel_2<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
 
