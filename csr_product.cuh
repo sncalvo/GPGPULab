@@ -29,8 +29,8 @@ __global__ void spmv_csr_kernel(
   __syncthreads();
 
   VALUE sum = 0;
-  for (int i = 0; i < end - start; i++) {
-    sum += near_val[threadIdx.x + i] * x[near_col[threadIdx.x]];
+  for (int i = start; i < end; i++) {
+    sum += A.val[i] * x[near_col[threadIdx.x]];
   }
 
   result[row] = sum;
@@ -161,7 +161,6 @@ __global__ void bsr_vector_kernel_3(
 
     unsigned long long bitMap = A.blBmp[rowStart];
     const int start = A.blStart[rowStart];
-    const int end = A.blStart[rowStart + 1];
 
     const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
