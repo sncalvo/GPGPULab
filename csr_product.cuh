@@ -175,15 +175,20 @@ __global__ void bsr_vector_kernel_3(
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   VALUE sumRow = 0;
-  const int col = A.blColIdx[rowStart];
+  __shared__ const int col = A.blColIdx[rowStart];
+  __shared__ unsigned long long bitMap = A.blBmp[rowStart];
+  __shared__ const int start = A.blStart[rowStart];
+  __shared__ VALUE vals[64];
 
-  unsigned long long bitMap = A.blBmp[rowStart];
-  const int start = A.blStart[rowStart];
+  __syncthreads();
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
+  vals[threadIdx.x] = A.val[start + numberOfVals];
+
+  __syncthreads();
 
   if (bitMap & (0x8000000000000000 >> (j*8 + i)) && rowStart < rowEnd) {
-    sumRow = A.val[start + numberOfVals];
+    sumRow = vals[threadIdx.x];
   } else {
     sumRow = 0;
   }
