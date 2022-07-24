@@ -18,16 +18,12 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution3
 
-nvcc ./cusparse.cu -lcusparse -o solution3
+nvcc ./main3.cu -lcusparse -o solution3
 
-./solution3 10 10
+# ./solution3 10 10
 
-# echo '============================'
-# echo 'NORMAL RUN STARTING'
-# echo '============================'
-
-# tests=( 100 1000 10000 12500 15000 )
-tests=( 10 )
+tests=( 100 1000 10000 12500 15000 )
+# tests=( 10 )
 
 for test in "${tests[@]}"
 do

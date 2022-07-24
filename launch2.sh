@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=mitrabajo
 #SBATCH --ntasks=1
-#SBATCH --mem=8192
-#SBATCH --time=00:10:00
+#SBATCH --mem=65536
+#SBATCH --time=00:30:00
 
 #SBATCH --partition=besteffort
 
@@ -18,28 +18,24 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution2
 
-nvcc ./main2.cu -o solution2
+nvcc ./main2.cu -lcusparse -o solution2
 
-# cuda-memcheck ./solution2 10000 10000
+# ./solution2 10 10
 
-echo '============================'
-echo 'NORMAL RUN STARTING'
-echo '============================'
+tests=( 100 1000 10000 12500 15000 )
+# tests=( 10 )
 
-./solution2 10000 10000
+for test in "${tests[@]}"
+do
+  echo '============================'
+  echo 'TESTING TIME WITH ARG $test'
+  echo '============================'
 
-# echo '============================'
-# echo 'TESTING TIME'
-# echo '============================'
+  nvprof ./solution2 $test $test
 
-# nvprof ./solution2 10000 10000
+  echo '============================'
+  echo 'TESTING EFFICIENCY WITH $test END'
+  echo '============================'
+  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency,shared_replay_overhead ./solution2 $test $test
+done
 
-# echo '============================'
-# echo 'TESTING EFFICIENCY'
-# echo '============================'
-
-# nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution2 10000 10000
-
-# echo '============================'
-# echo 'END'
-# echo '============================'

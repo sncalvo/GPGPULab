@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=mitrabajo
 #SBATCH --ntasks=1
-#SBATCH --mem=8192
-#SBATCH --time=00:02:00
+#SBATCH --mem=65536
+#SBATCH --time=00:30:00
 
 #SBATCH --partition=besteffort
 
@@ -18,13 +18,23 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution4
 
-nvcc --version
+nvcc ./main4.cu -lcusparse -o solution4
 
-nvcc ./cudasample.cu -lcusparse -o solution4
+# ./solution4 10 10
 
-echo '============================'
-echo 'NORMAL RUN STARTING'
-echo '============================'
+tests=( 100 1000 10000 12500 15000 )
+# tests=( 10 )
 
-# cuda-memcheck ./solution3 10000 10000
-./solution4 10000 10000
+for test in "${tests[@]}"
+do
+  echo '============================'
+  echo 'TESTING TIME WITH ARG $test'
+  echo '============================'
+
+  nvprof ./solution4 $test $test
+
+  echo '============================'
+  echo 'TESTING EFFICIENCY WITH $test END'
+  echo '============================'
+  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency,shared_replay_overhead ./solution4 $test $test
+done

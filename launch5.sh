@@ -3,7 +3,9 @@
 #SBATCH --ntasks=1
 #SBATCH --mem=65536
 #SBATCH --time=00:30:00
+
 #SBATCH --partition=besteffort
+
 #SBATCH --qos=besteffort_gpu
 
 #SBATCH --gres=gpu:1
@@ -16,18 +18,12 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution5
 
-nvcc ./main3.cu -lineinfo -o solution5
-
-# cuda-memcheck ./solution2 10000 10000
-
-# echo '============================'
-# echo 'NORMAL RUN STARTING'
-# echo '============================'
+nvcc ./cusparse.cu -lineinfo -o solution5
 
 # ./solution5 10 10
 
-# tests=( 100 1000 10000 12500 15000 )
-tests=( 10 )
+tests=( 100 1000 10000 12500 15000 )
+# tests=( 10 )
 
 for test in "${tests[@]}"
 do

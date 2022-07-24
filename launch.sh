@@ -11,7 +11,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=sncalvo5@gmail.com
-#SBATCH -o salida.out
+#SBATCH -o salida1.out
 
 export PATH=$PATH:/usr/local/cuda/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
@@ -20,14 +20,10 @@ rm ./solution
 
 nvcc ./main.cu -o solution
 
-# echo '============================'
-# echo 'NORMAL RUN STARTING'
-# echo '============================'
+# ./solution 10 10
 
-./solution 10 10
-
-# tests=( 100 1000 10000 12500 15000 )
-tests=( 10 )
+tests=( 100 1000 10000 12500 15000 )
+# tests=( 10 )
 
 for test in "${tests[@]}"
 do
