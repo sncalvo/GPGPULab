@@ -175,20 +175,18 @@ __global__ void bsr_vector_kernel_3(
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   VALUE sumRow = 0;
-  // if (rowStart < rowEnd) {
-    const int col = A.blColIdx[rowStart];
+  const int col = A.blColIdx[rowStart];
 
-    unsigned long long bitMap = A.blBmp[rowStart];
-    const int start = A.blStart[rowStart];
+  unsigned long long bitMap = A.blBmp[rowStart];
+  const int start = A.blStart[rowStart];
 
-    const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
+  const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
-    if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-      sumRow = A.val[start + numberOfVals];
-    } else {
-      sumRow = 0;
-    }
-  // }
+  if (bitMap & (0x8000000000000000 >> (j*8 + i)) && rowStart < rowEnd) {
+    sumRow = A.val[start + numberOfVals];
+  } else {
+    sumRow = 0;
+  }
 
   warp_reduce_sum(sumRow);
 
