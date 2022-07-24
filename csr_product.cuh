@@ -133,7 +133,7 @@ __global__ void bsr_vector_kernel_2(
 
 __inline__ __device__ VALUE warp_reduce_sum(VALUE val) {
   for (int mask = warpSize/2; mask > 0; mask /= 2)
-    val += __shfl_xor_sync(val, mask);
+    val += __shfl_xor(val, mask);
   return val;
 }
 
