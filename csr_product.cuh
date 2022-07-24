@@ -171,7 +171,7 @@ __global__ void bsr_vector_kernel_3(
 
   const int rowIdx = blockIdx.x;
 
-  const int rowStart = A.blRowPtr[rowIdx + 1] + blockIdx.y;
+  const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   VALUE sumRow = 0;
