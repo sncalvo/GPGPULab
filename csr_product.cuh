@@ -46,16 +46,25 @@ __global__ void spmv_csr_kernel_2(
   __shared__ int start;
   __shared__ int end;
 
+  __shared__ VALUE vals[256];
+  __shared__ VALUE x[256];
+
   if (threadIdx.x == 0) {
     start = A.rowPtr[row];
     end = A.rowPtr[row + 1];
+  }
+  __syncthreads();
+
+  if (start + col < end) {
+    vals[threadIdx.x] = A.val[start + col];
+    x[threadIdx.x] = x[A.colIdx[start + col]];
   }
 
   __syncthreads();
 
   VALUE sum = 0;
   if (start + col < end) {
-    sum = A.val[start + col] * x[A.colIdx[start + col]];
+    sum = vals[threadIdx.x] * x[threadIdx.x];
   } else {
     sum = 0;
   }
@@ -183,15 +192,18 @@ __global__ void bsr_vector_kernel_3(
   __shared__ VALUE vals[64];
   __shared__ VALUE shared_x[64];
 
-  col = A.blColIdx[rowStart];
-  bitMap = A.blBmp[rowStart];
-  start = A.blStart[rowStart];
+  if (threadIdx.x == 0) {
+    col = A.blColIdx[rowStart];
+    bitMap = A.blBmp[rowStart];
+    start = A.blStart[rowStart];
+  }
+
+  shared_x[threadIdx.x] = x[col * 8 + i];
 
   __syncthreads();
 
   const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
   vals[threadIdx.x] = A.val[start + numberOfVals];
-  shared_x[threadIdx.x] = x[col * 8 + i];
 
   __syncthreads();
 
