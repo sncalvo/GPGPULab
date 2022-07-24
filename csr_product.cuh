@@ -82,7 +82,7 @@ __global__ void bsr_vector_kernel(
 }
 
 // Kernel that implements spmv product using Block CSR matrix
-__global__ void bsr_vector_kernel_3(
+__global__ void bsr_vector_kernel_2(
   BlMat A,
   const VALUE *x,
   VALUE *result
@@ -128,5 +128,55 @@ __global__ void bsr_vector_kernel_3(
         atomicAdd(&result[rowIdx * 8 + k], sumRow);
       }
     }
+  }
+}
+
+__inline__ __device__ VALUE warp_reduce_sum(VALUE val) {
+  for (int mask = warpSize/2; mask > 0; mask /= 2)
+    val += __shfl_xor(val, mask);
+  return val;
+}
+
+// Kernel that implements spmv product using Block CSR matrix
+__global__ void bsr_vector_kernel_3(
+  BlMat A,
+  const VALUE *x,
+  VALUE *result
+) {
+  printf("%d\n", warpSize);
+  __shared__ VALUE block[8][8];
+
+  const int i = threadIdx.x;
+  const int j = threadIdx.y;
+
+  const int rowIdx = blockIdx.x;
+  const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
+  const int rowEnd = A.blRowPtr[rowIdx + 1];
+
+  if (rowStart >= rowEnd) {
+    block[j][i] = 0;
+  } else {
+    const int col = A.blColIdx[rowStart];
+
+    unsigned long long bitMap = A.blBmp[rowStart];
+    const int start = A.blStart[rowStart];
+    const int end = A.blStart[rowStart + 1];
+
+    const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
+
+    if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
+      block[j][i] = A.val[start + numberOfVals];
+    } else {
+      block[j][i] = 0;
+    }
+  }
+
+  // __syncwarp();
+
+  VALUE sumRow = block[j][i] * x[col * 8 + i];
+  warp_reduce_sum(sumRow);
+
+  if (sumRow != 0) {
+    atomicAdd(&result[rowIdx * 8 + j], sumRow);
   }
 }
