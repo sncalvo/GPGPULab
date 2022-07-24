@@ -20,24 +20,24 @@ rm ./solution3
 
 nvcc ./cusparse.cu -lcusparse -o solution3
 
-# ./solution3 10000 10000
+./solution3 10 10
 
 # echo '============================'
 # echo 'NORMAL RUN STARTING'
 # echo '============================'
 
-tests=( 100 1000 10000 12500 15000 )
+# tests=( 100 1000 10000 12500 15000 )
 
-for test in "${tests[@]}"
-do
-  echo '============================'
-  echo 'TESTING TIME WITH ARG $test'
-  echo '============================'
+# for test in "${tests[@]}"
+# do
+#   echo '============================'
+#   echo 'TESTING TIME WITH ARG $test'
+#   echo '============================'
 
-  nvprof ./solution3 $test $test
+#   nvprof ./solution3 $test $test
 
-  echo '============================'
-  echo 'TESTING EFFICIENCY WITH $test END'
-  echo '============================'
-  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency,atomic_replay_overhead ./solution3 $test $test
-done
+#   echo '============================'
+#   echo 'TESTING EFFICIENCY WITH $test END'
+#   echo '============================'
+#   nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency,atomic_replay_overhead ./solution3 $test $test
+# done
