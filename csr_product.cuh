@@ -133,7 +133,7 @@ __global__ void bsr_vector_kernel_2(
 
 __inline__ __device__ VALUE warp_reduce_sum(VALUE val) {
   for (int mask = warpSize/2; mask > 0; mask /= 2)
-    val += __shfl_xor(val, mask);
+    val += __shfl_xor_sync(val, mask);
   return val;
 }
 
@@ -153,6 +153,7 @@ __global__ void bsr_vector_kernel_3(
   const int rowStart = A.blRowPtr[rowIdx] + blockIdx.y;
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
+  VALUE sumRow = 0;
   if (rowStart >= rowEnd) {
     block[j][i] = 0;
   } else {
@@ -169,11 +170,12 @@ __global__ void bsr_vector_kernel_3(
     } else {
       block[j][i] = 0;
     }
+
+    sumRow = block[j][i] * x[col * 8 + i];
   }
 
   // __syncwarp();
 
-  VALUE sumRow = block[j][i] * x[col * 8 + i];
   warp_reduce_sum(sumRow);
 
   if (sumRow != 0) {
