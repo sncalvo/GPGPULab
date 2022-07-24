@@ -175,7 +175,7 @@ __global__ void bsr_vector_kernel_3(
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   VALUE sumRow = 0;
-  if (rowStart < rowEnd) {
+  // if (rowStart < rowEnd) {
     const int col = A.blColIdx[rowStart];
 
     unsigned long long bitMap = A.blBmp[rowStart];
@@ -188,7 +188,7 @@ __global__ void bsr_vector_kernel_3(
     } else {
       sumRow = 0;
     }
-  }
+  // }
 
   warp_reduce_sum(sumRow);
 
