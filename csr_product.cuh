@@ -21,16 +21,9 @@ __global__ void spmv_csr_kernel(
   int start = near_row[threadIdx.x];
   int end = near_row[threadIdx.x + 1];
 
-  __shared__ VALUE near_val[1024];
-  __shared__ int near_col[1024];
-
-  near_val[threadIdx.x] = A.val[start];
-  near_col[threadIdx.x] = A.colIdx[start];
-  __syncthreads();
-
   VALUE sum = 0;
   for (int i = start; i < end; i++) {
-    sum += A.val[i] * x[near_col[threadIdx.x + i]];
+    sum += A.val[i] * x[A.colIdx[start + i]];
   }
 
   result[row] = sum;
