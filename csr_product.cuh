@@ -29,7 +29,7 @@ __global__ void spmv_csr_kernel(
   __syncthreads();
 
   VALUE sum = 0;
-  for (int i = start; i < end; i++) {
+  for (int i = 0; i < end - start; i++) {
     sum += near_val[threadIdx.x + i] * x[near_col[threadIdx.x]];
   }
 
