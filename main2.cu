@@ -74,12 +74,12 @@ int main(int argc, char *argv[]){
   VALUE *res = (VALUE*) malloc(A_csr.colN*sizeof(VALUE));
   CUDA_CHK(cudaMemcpy(res, d_res, A_csr.colN*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
-  printf("\n");
+  // printf("\n");
 
-  for (int i = 0; i < 10 * 8; ++i)
-  {
-    printf("%.2f\n", res[i]);
-  }
+  // for (int i = 0; i < 10 * 8; ++i)
+  // {
+  //   printf("%.2f\n", res[i]);
+  // }
 
   cudaFree(d_vector);
   cudaFree(d_res);

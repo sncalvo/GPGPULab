@@ -22,24 +22,24 @@ nvcc ./main3.cu -lineinfo -o solution5
 
 # cuda-memcheck ./solution2 10000 10000
 
-echo '============================'
-echo 'NORMAL RUN STARTING'
-echo '============================'
-
-./solution5 10000 10000
-
 # echo '============================'
-# echo 'TESTING TIME'
+# echo 'NORMAL RUN STARTING'
 # echo '============================'
 
-# nvprof ./solution2 10000 10000
+# ./solution5 10000 10000
 
-# echo '============================'
-# echo 'TESTING EFFICIENCY'
-# echo '============================'
+tests=( 100 1000 10000 12500 15000 )
 
-# nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution2 10000 10000
+for test in "${tests[@]}"
+do
+  echo '============================'
+  echo 'TESTING TIME WITH ARG $test'
+  echo '============================'
 
-# echo '============================'
-# echo 'END'
-# echo '============================'
+  nvprof ./solution5 $test $test
+
+  echo '============================'
+  echo 'TESTING EFFICIENCY WITH $test END'
+  echo '============================'
+  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency,atomic_replay_overhead ./solution5 $test $test
+done

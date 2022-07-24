@@ -80,12 +80,12 @@ int main(int argc, char *argv[]){
   VALUE *res = (VALUE*) malloc(blColN*8*sizeof(VALUE));
   CUDA_CHK(cudaMemcpy(res, d_res, blColN*8*sizeof(VALUE), cudaMemcpyDeviceToHost));
 
-  printf("\n");
+  // printf("\n");
 
-  for (int i = 0; i < 10 * 8; ++i)
-  {
-    printf("%.2f\n", res[i]);
-  }
+  // for (int i = 0; i < 10 * 8; ++i)
+  // {
+  //   printf("%.2f\n", res[i]);
+  // }
 
   cudaFree(d_vector);
   cudaFree(d_val);

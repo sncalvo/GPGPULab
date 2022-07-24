@@ -20,11 +20,11 @@ rm ./solution
 
 nvcc ./main.cu -o solution
 
-echo '============================'
-echo 'NORMAL RUN STARTING'
-echo '============================'
+# echo '============================'
+# echo 'NORMAL RUN STARTING'
+# echo '============================'
 
-./solution 10000 10000
+# ./solution 10000 10000
 
 # echo '============================'
 # echo 'TESTING TIME'
@@ -42,18 +42,18 @@ echo '============================'
 # # echo 'END'
 # # echo '============================'
 
-# tests=( 100 1000 10000 20000 50000 )
+tests=( 100 1000 10000 12500 15000 )
 
-# for test in "${tests[@]}"
-# do
-#   echo '============================'
-#   echo 'TESTING TIME WITH ARG $test'
-#   echo '============================'
+for test in "${tests[@]}"
+do
+  echo '============================'
+  echo 'TESTING TIME WITH ARG $test'
+  echo '============================'
 
-#   nvprof ./solution $test $test
+  nvprof ./solution $test $test
 
-#   echo '============================'
-#   echo 'TESTING EFFICIENCY WITH $test END'
-#   echo '============================'
-#   nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency ./solution $test $test
-# done
+  echo '============================'
+  echo 'TESTING EFFICIENCY WITH $test END'
+  echo '============================'
+  nvprof --metrics gld_efficiency,gst_efficiency,shared_efficiency,atomic_replay_overhead ./solution $test $test
+done
