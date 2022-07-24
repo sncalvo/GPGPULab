@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
   CUDA_CHK(cudaMalloc((void **)&d_res, blColN*8*sizeof(VALUE)));
 
 	dim3 dimBlock(256);
-  Fast ceil(A_csr.colN/256)
+  // Fast ceil(A_csr.colN/256)
 	dim3 dimGrid((A_csr.colN + 256 - 1) / 256);
 
   spmv_csr_kernel<<<dimGrid, dimBlock>>>(A_csr, d_vector, d_res);
