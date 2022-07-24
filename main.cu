@@ -68,7 +68,8 @@ int main(int argc, char *argv[]){
   // }
 
   dim3 dimBlock(256, 1);
-  dim3 dimGrid((A_csr.colN + 256 - 1) / 256, A_csr.filN);
+  const int gridRowSquare = sqrt(A_csr.filN);
+  dim3 dimGrid((A_csr.colN + 256 - 1) / 256, gridRowSquare, gridRowSquare);
   printf("%d\n", dimBlock.x);
   printf("x: %d, y: %d\n", dimGrid.x, dimGrid.y);
 

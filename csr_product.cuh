@@ -40,7 +40,7 @@ __global__ void spmv_csr_kernel_2(
   const VALUE *x, // Vector x
   VALUE *result // Result vector
 ) {
-  const int row = blockIdx.y;
+  const int row = blockIdx.y * gridDim.y + blockIdx.z;
   const int col = blockIdx.x * blockDim.x + threadIdx.x;
 
   __shared__ int near_row[1024];
