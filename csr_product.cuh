@@ -29,7 +29,7 @@ __global__ void spmv_csr_kernel(
 
   VALUE sum = 0;
   for (int i = start; i < end; i++) {
-    sum += A.val[i] * x[A.colIdx[start]];
+    sum += A.val[start + i] * x[A.colIdx[start + i]];
   }
 
   result[row] = sum;
@@ -166,9 +166,6 @@ __global__ void bsr_vector_kernel_3(
   const VALUE *x,
   VALUE *result
 ) {
-  // printf("%d\n", warpSize);
-  __shared__ VALUE block[8][8];
-
   const int i = threadIdx.x;
   const int j = threadIdx.y;
 
@@ -188,15 +185,11 @@ __global__ void bsr_vector_kernel_3(
     const int numberOfVals = __popcll(bitMap >> (64 - (j*8 + i)));
 
     if (bitMap & (0x8000000000000000 >> (j*8 + i))) {
-      block[j][i] = A.val[start + numberOfVals];
+      sumRow = A.val[start + numberOfVals];
     } else {
-      block[j][i] = 0;
+      sumRow = 0;
     }
-
-    sumRow = block[j][i] * x[col * 8 + i];
   }
-
-  // __syncwarp();
 
   warp_reduce_sum(sumRow);
 
