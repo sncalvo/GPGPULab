@@ -174,9 +174,7 @@ __global__ void bsr_vector_kernel_3(
   const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   VALUE sumRow = 0;
-  if (rowStart >= rowEnd) {
-    block[j][i] = 0;
-  } else {
+  if (rowStart < rowEnd) {
     const int col = A.blColIdx[rowStart];
 
     unsigned long long bitMap = A.blBmp[rowStart];
