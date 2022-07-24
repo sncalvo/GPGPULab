@@ -47,7 +47,7 @@ __global__ void spmv_csr_kernel_2(
   __shared__ int end;
 
   __shared__ VALUE vals[256];
-  __shared__ VALUE x[256];
+  __shared__ VALUE shared_x[256];
 
   if (threadIdx.x == 0) {
     start = A.rowPtr[row];
@@ -57,14 +57,14 @@ __global__ void spmv_csr_kernel_2(
 
   if (start + col < end) {
     vals[threadIdx.x] = A.val[start + col];
-    x[threadIdx.x] = x[A.colIdx[start + col]];
+    shared_x[threadIdx.x] = x[A.colIdx[start + col]];
   }
 
   __syncthreads();
 
   VALUE sum = 0;
   if (start + col < end) {
-    sum = vals[threadIdx.x] * x[threadIdx.x];
+    sum = vals[threadIdx.x] * shared_x[threadIdx.x];
   } else {
     sum = 0;
   }
