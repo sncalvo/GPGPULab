@@ -18,7 +18,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 rm ./solution2
 
-nvcc ./main2.cu -lcusparse -o solution2
+nvcc ./main2.cu -lineinfo -o solution2
 
 # ./solution2 10 10
 
