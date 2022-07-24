@@ -30,7 +30,7 @@ __global__ void spmv_csr_kernel(
 
   VALUE sum = 0;
   for (int i = start; i < end; i++) {
-    sum += A.val[i] * x[near_col[threadIdx.x]];
+    sum += A.val[i] * x[near_col[threadIdx.x + i]];
   }
 
   result[row] = sum;
