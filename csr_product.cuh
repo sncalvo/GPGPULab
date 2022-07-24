@@ -29,7 +29,7 @@ __global__ void spmv_csr_kernel(
 
   VALUE sum = 0;
   for (int i = start; i < end; i++) {
-    sum += A.val[start + i] * x[A.colIdx[start + i]];
+    sum += A.val[i] * x[A.colIdx[i]];
   }
 
   result[row] = sum;
