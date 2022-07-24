@@ -177,7 +177,7 @@ __global__ void bsr_vector_kernel_3(
   __syncthreads();
 
   const int rowStart = near_row[threadIdx.x] + blockIdx.y;
-  const int rowEnd = near_row[threadIdx.x + 1];
+  const int rowEnd = A.blRowPtr[rowIdx + 1];
 
   VALUE sumRow = 0;
   if (rowStart < rowEnd) {
