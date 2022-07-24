@@ -53,7 +53,7 @@ __global__ void spmv_csr_kernel_2(
 
   VALUE sum = 0;
   if (start + col < end) {
-    sum = A.val[start + col] * x[A.colIdx[start + i]];
+    sum = A.val[start + col] * x[A.colIdx[start + col]];
   } else {
     sum = 0;
   }
