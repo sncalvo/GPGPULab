@@ -143,7 +143,7 @@ __global__ void bsr_vector_kernel_3(
   const VALUE *x,
   VALUE *result
 ) {
-  printf("%d\n", warpSize);
+  // printf("%d\n", warpSize);
   __shared__ VALUE block[8][8];
 
   const int i = threadIdx.x;
